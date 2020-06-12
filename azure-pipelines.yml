@@ -57,10 +57,6 @@ stages:
     - powershell: |
       # Using an input-macro:
       Write-Host "This works: $(discordToken)"
-
-      # Using the mapped env var:
-      Write-Host "This works: $env:MY_MAPPED_ENV_VAR"    # Recommended
-
       env:
         MY_MAPPED_ENV_VAR: $(discordToken) # right way to map to an env variable
           
