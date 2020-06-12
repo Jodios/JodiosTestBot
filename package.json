@@ -1,0 +1,23 @@
+{
+  "name": "jodiostestbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Main.ts",
+  "scripts": {
+    "start": "ts-node-dev --respawn src/Main.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^13.7.4",
+    "ts-node": "^8.6.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.8.2"
+  },
+  "dependencies": {
+    "discord.io": "^2.5.3",
+    "discord.js": "^12.2.0",
+    "winston": "^3.2.1"
+  }
+}
