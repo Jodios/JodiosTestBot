@@ -1,8 +1,9 @@
 import Discord from "discord.js";
-import auth from "../resources/auth.json";
 import { mock } from "./command/Mock";
+import dotenv from "dotenv";
+dotenv.config()
 
-
+let authKey = process.env.discordToken
 // Initialize Discord Bot
 let bot = new Discord.Client();
 
@@ -25,4 +26,4 @@ bot.on('message', (msg: Discord.Message)  => {
     }
 });
 
-bot.login(auth.token);
+bot.login(authKey);
