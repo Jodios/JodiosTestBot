@@ -19,7 +19,7 @@ bot.on('message', (msg: Discord.Message)  => {
         args = args.splice(1);
         switch(cmd) {
             case 'mock':
-                msg.reply( mock( args.join(" ") ) );
+                mock( msg, (msg.channel as Discord.TextChannel) );
                 break;
          }
     }
