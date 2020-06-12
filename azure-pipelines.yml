@@ -43,8 +43,6 @@ stages:
         tags: |
           $(tag)
     - powershell: |
-      # Using an input-macro:
-      Write-Host "This works: $(discordToken)"
       env:
         MY_MAPPED_ENV_VAR: $(discordToken) # right way to map to an env variable
           
