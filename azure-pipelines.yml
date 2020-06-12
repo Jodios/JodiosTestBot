@@ -24,6 +24,18 @@ variables:
   # Name of the new namespace being created to deploy the PR changes.
   k8sNamespaceForPR: 'review-app-$(System.PullRequest.PullRequestId)'
 
+steps:
+
+- powershell: |
+    # Using an input-macro:
+    Write-Host "This works: $(discordToken)"
+
+    # Using the mapped env var:
+    Write-Host "This works: $env:MY_MAPPED_ENV_VAR"    # Recommended
+
+  env:
+    MY_MAPPED_ENV_VAR: $(discordToken) # right way to map to an env variable
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -42,6 +54,15 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+    - powershell: |
+      # Using an input-macro:
+      Write-Host "This works: $(discordToken)"
+
+      # Using the mapped env var:
+      Write-Host "This works: $env:MY_MAPPED_ENV_VAR"    # Recommended
+
+      env:
+        MY_MAPPED_ENV_VAR: $(discordToken) # right way to map to an env variable
           
     - upload: manifests
       artifact: manifests
