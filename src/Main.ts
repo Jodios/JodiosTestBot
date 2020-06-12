@@ -14,16 +14,13 @@ bot.on('ready', () => {
 
 bot.on('message', (msg: Discord.Message)  => {
     if(msg.content[0] == "!"){
-        var args = msg.content.substring(1).split(' ');
-        var cmd = args[0];
-        console.log(args);
+        let args = msg.content.substring(1).split(' ');
+        let cmd = args[0];
         args = args.splice(1);
-        console.log(args);
         switch(cmd) {
             case 'mock':
                 msg.reply( mock( args.join(" ") ) );
                 break;
-            // Just add any case commands if you want to..
          }
     }
 });
