@@ -1,7 +1,6 @@
 import Discord from "discord.js";
 
 export async function mock(cmdMsg: Discord.Message, channel: Discord.TextChannel ) {
-    console.log(cmdMsg)
     let name = "";
     let message = "";
     if(cmdMsg.mentions.users.array().length == 0){

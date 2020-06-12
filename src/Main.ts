@@ -1,6 +1,6 @@
 import Discord from "discord.js";
 import auth from "../resources/auth.json";
-import { mock } from "./utils/Mock";
+import { mock } from "./command/Mock";
 
 
 // Initialize Discord Bot
