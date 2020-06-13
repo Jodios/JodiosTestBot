@@ -42,7 +42,7 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         command: 'build'
         Dockerfile: '**/Dockerfile'
-        arguments: '--build-arg discordToken='${discordToken}
+        arguments: ${BUILD_ARG}
     - task: Docker@2
       displayName: Push
       inputs:
