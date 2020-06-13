@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 dotenv.config()
 
 let authKey = process.env.discordToken
+console.log(`authKey = ${authKey}`)
+console.log(`MY_MAPPED_ENV_VAR = ${process.env.MY_MAPPED_ENV_VAR}`)
+
 // Initialize Discord Bot
 let bot = new Discord.Client();
 
