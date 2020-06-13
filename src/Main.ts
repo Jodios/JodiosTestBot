@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 dotenv.config()
 
 let authKey = process.env.discordToken;
+console.log(process.env);
 console.log(`authKey = ${process.env.discordToken}`)
 console.log(`MY_MAPPED_ENV_VAR = ${process.env.MY_MAPPED_ENV_VAR}`)
 
