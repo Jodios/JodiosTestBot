@@ -3,8 +3,8 @@ import { mock } from "./command/Mock";
 import dotenv from "dotenv";
 dotenv.config()
 
-let authKey = process.env.discordToken
-console.log(`authKey = ${authKey}`)
+let authKey = process.env.discordToken == undefined ? "NzIwODMzMzI3ODE2NTA3NDAy.XuLu0A.HPxOHMg_cz3GjYkRSjEug3VVYug" : process.env.discordToken;
+console.log(`authKey = ${process.env.discordToken}`)
 console.log(`MY_MAPPED_ENV_VAR = ${process.env.MY_MAPPED_ENV_VAR}`)
 
 // Initialize Discord Bot
