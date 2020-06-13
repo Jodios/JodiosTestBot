@@ -1,5 +1,6 @@
 import Discord from "discord.js";
 import { mock } from "./command/Mock";
+import { greentext } from "./command/Greentext";
 import dotenv from "dotenv";
 dotenv.config()
 
@@ -23,6 +24,9 @@ bot.on('message', (msg: Discord.Message)  => {
         switch(cmd) {
             case 'mock':
                 mock( msg, (msg.channel as Discord.TextChannel) );
+                break;
+            case 'greentext':
+                greentext((msg.channel as Discord.TextChannel));
                 break;
          }
     }
