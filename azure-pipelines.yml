@@ -38,6 +38,7 @@ stages:
     - task: Docker@2
       displayName: Build
       inputs:
+        repository: $(imageRepository)
         containerRegistry: $(dockerRegistryServiceConnection)
         command: 'build'
         Dockerfile: '**/Dockerfile'
@@ -46,7 +47,7 @@ stages:
       displayName: Push
       inputs:
         repository: $(imageRepository)
-        containerRegistry: 'discordregistry'
+        containerRegistry: $(dockerRegistryServiceConnection)
         command: 'push'
         tags: |
           $(tag)
