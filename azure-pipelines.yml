@@ -35,16 +35,19 @@ stages:
       environment:
         discordToken: $(discordToken)
     steps:
-    - powershell: |
-      env:
-        MY_MAPPED_ENV_VAR: $(discordToken) # right way to map to an env variable
     - task: Docker@2
-      displayName: Build and push an image to container registry
+      displayName: Build
       inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
+        command: 'build'
+        Dockerfile: '**/Dockerfile'
+        arguments: '--build-arg discordToken=${discordToken}'
+    - task: Docker@2
+      displayName: Push
+      inputs:
+        repository: $(imageRepository)
+        containerRegistry: 'discordregistry'
+        command: 'push'
         tags: |
           $(tag)
           
