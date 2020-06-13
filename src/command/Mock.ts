@@ -3,7 +3,7 @@ import Discord from "discord.js";
 export async function mock(cmdMsg: Discord.Message, channel: Discord.TextChannel ) {
     let name = "";
     let message = "";
-    console.log(`name = ${name}`)
+    
     if(cmdMsg.mentions.users.array().length == 0){
         channel.send(" Who are we mocking? ")
         return;
