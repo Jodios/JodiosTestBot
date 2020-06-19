@@ -2,3 +2,4 @@ auth.json
 .env
 node_modules
 package-lock.json
+INFO.json
