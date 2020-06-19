@@ -1,7 +1,6 @@
 import Discord from "discord.js";
 const CoinGecko = require("coingecko-api");
 
-const url = "https://www.reddit.com/r/greentext.json?count=10";
 const coingeckoClient = new CoinGecko();
 
 export async function crypto(channel: Discord.TextChannel, args: string[]) {
@@ -10,8 +9,18 @@ export async function crypto(channel: Discord.TextChannel, args: string[]) {
         return;
     }
 
-    let x = await coingeckoClient.ping()
+    // @ts-ignore
+    let data = await (coingeckoClient.coins.all());
+    data = (data['data']).filter((x:any) => x.symbol == args[0])[0];
 
-    console.log(x);
+    if(data == undefined){
+        channel.send("No matches for that coin");
+        return;
+    }
+    let msg = {
+        "name": data.name,
+        "price": data.market_data.current_price
+    }
+    channel.send(JSON.stringify(msg));
 
 }
