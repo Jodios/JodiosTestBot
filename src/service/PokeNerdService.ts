@@ -10,7 +10,7 @@ export function PokeNerdService(n: number, channel: Discord.TextChannel) {
 
         let pokeURL = `${url}${Math.floor(Math.random() * 806 + 1)}`;
         axios.get(pokeURL).then(res => {
-    
+            time = new Date().getTime();
             actualName = res.data.forms[0].name;
             let image = res.data.sprites.front_default;
             channel.send("Who's that pokemon?", { files: [image] });
