@@ -7,8 +7,8 @@ let actualName = "";
 
 export function PokeNerdService(n: number, channel: Discord.TextChannel) {
     if ( 45 < n && n < 55){
-        
-        let pokeURL = `${url}${Math.floor(Math.random() * 1000 + 1)}`;
+
+        let pokeURL = `${url}${Math.floor(Math.random() * 806 + 1)}`;
         axios.get(pokeURL).then(res => {
     
             actualName = res.data.forms[0].name;
