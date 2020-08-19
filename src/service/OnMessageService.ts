@@ -35,6 +35,9 @@ export function onMessage(client: Discord.Client) {
                 case 'spam':
                     spam( msg.mentions.users.array()[0] );
                     break;
+                case 'test':
+                    msg.channel.send("HERE");
+                    break;
             }
         }
     });
