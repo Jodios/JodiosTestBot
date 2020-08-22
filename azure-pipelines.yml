@@ -30,7 +30,7 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         arguments: '--build-arg discordToken=$(discordToken)'
         tags: |
-          $(tag)
+          jodios/jodios_test_bot:$(tag)
     - task: CmdLine@2
       displayName: Push
       inputs:
