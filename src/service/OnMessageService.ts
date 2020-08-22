@@ -4,6 +4,7 @@ import { insult } from "../command/Insult";
 import { greentext } from "../command/Greentext";
 import { crypto } from "../command/Crypto";
 import { spam } from "../command/Spam";
+import { clear } from "../command/Clear";
 import { PokeNerdService as pokeNerd, guessName } from "../service/PokeNerdService";
 
 export function onMessage(client: Discord.Client) {
@@ -37,6 +38,9 @@ export function onMessage(client: Discord.Client) {
                     break;
                 case 'test':
                     msg.channel.send("HERE");
+                    break;
+                case 'clear':
+                    clear((msg.channel as Discord.TextChannel));
                     break;
             }
         }
