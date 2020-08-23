@@ -29,6 +29,8 @@ node {
         sh "export KUBECONFIG=~/.kube/config"
         sh "docker image prune -af"
         sshagent(['k8s-master']) {
+            sh "ls"
+            sh "pwd"
             sh "kubectl get pods"
         }
         // sh "cat ~/.kube/config"
