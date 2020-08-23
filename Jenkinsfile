@@ -1,4 +1,10 @@
 node {
+    def jenkinsCredentials = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+        com.cloudbees.plugins.credentials.Credentials.class,
+        Jenkins.instance,
+        null,
+        null
+    );
     username = jenkinsCredentials.test_ssh.Username
     pswd     = jenkinsCredentials.test_ssh.Password
     // def build = "${env.BUILD_NUMBER}"
