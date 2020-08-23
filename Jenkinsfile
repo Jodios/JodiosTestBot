@@ -43,7 +43,10 @@ node {
     stage('Deploy to Kubernetes'){
         sh "export KUBECONFIG=~/.kube/config"
         sh "docker image prune -af"
-        sshCommand remote: remote, command: "ls"
+        sshCommand remote: remote, command: "
+            ls
+            kubectl get pods
+        "
         // sh "cat ~/.kube/config"
         // https://10.0.0.18:6443/
         // sh "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
