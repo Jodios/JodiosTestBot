@@ -1,8 +1,12 @@
 import Discord from "discord.js";
 
-export async function clear(channel: Discord.TextChannel){
+export async function clear(channel: Discord.TextChannel, user: Discord.GuildMember){
     
-    channel.send("testing kube deployments :)");
+    if (user.hasPermission("ADMINISTRATOR")){
+        channel.send(`${user.nickname} is an Admin`);
+    }else{
+        channel.send(`${user.nickname} is a normal`);
+    }
 
 }
 

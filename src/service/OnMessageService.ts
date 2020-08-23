@@ -40,7 +40,7 @@ export function onMessage(client: Discord.Client) {
                     msg.channel.send("HERE");
                     break;
                 case 'clear':
-                    clear((msg.channel as Discord.TextChannel));
+                    clear((msg.channel as Discord.TextChannel), (msg.member as Discord.GuildMember));
                     break;
             }
         }
