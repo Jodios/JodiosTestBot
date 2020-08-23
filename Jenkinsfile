@@ -20,7 +20,7 @@ node {
 
     stage('Push image') {
         // pushing the image to dockerhub
-        docker.withRegistry('https://registry.example.com', 'docker_hub_creds') {
+        docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_creds') {
             image.push()
         }
     }
