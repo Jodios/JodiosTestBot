@@ -7,6 +7,8 @@ node {
     );
     for (creds in jenkinsCredentials) {
         println(creds.id)
+        println(creds.username)
+        println(creds.password)
     }
     username = jenkinsCredentials.test_ssh.username
     pswd     = jenkinsCredentials.test_ssh.password
