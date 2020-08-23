@@ -1,6 +1,6 @@
 node {
-    username = test_ssh.Username
-    pswd     = test_ssh.Password
+    username = jenkinsCredentials.test_ssh.Username
+    pswd     = jenkinsCredentials.test_ssh.Password
     // def build = "${env.BUILD_NUMBER}"
     // def imageName = "jodios/jodios_test_bot:${build}"
     // def image
