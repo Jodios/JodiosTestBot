@@ -8,8 +8,8 @@ node {
     for (creds in jenkinsCredentials) {
         println(creds.id)
     }
-    username = jenkinsCredentials.test_ssh.Username
-    pswd     = jenkinsCredentials.test_ssh.Password
+    username = jenkinsCredentials.test_ssh.username
+    pswd     = jenkinsCredentials.test_ssh.password
     // def build = "${env.BUILD_NUMBER}"
     // def imageName = "jodios/jodios_test_bot:${build}"
     // def image
