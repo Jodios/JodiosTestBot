@@ -10,8 +10,8 @@ node {
         println(creds.username)
         println(creds.password)
     }
-    username = jenkinsCredentials.test_ssh.username
-    pswd     = jenkinsCredentials.test_ssh.password
+    username = jenkinsCredentials["test_ssh"].username
+    pswd     = jenkinsCredentials["test_ssh"].password
     // def build = "${env.BUILD_NUMBER}"
     // def imageName = "jodios/jodios_test_bot:${build}"
     // def image
