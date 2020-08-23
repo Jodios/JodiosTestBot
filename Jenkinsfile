@@ -13,7 +13,7 @@ node {
     stage('Build image') {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
-        image = docker.build("${imageName}", "--build-arg discordToken=${env.discordToken}")
+        image = docker.build("${imageName}", "--build-arg discordToken=${env.discordToken} .")
         // sh "echo ${env.discordToken}"
         // sh "docker build --build-arg discordToken=${env.discordToken} -t ${image} ."
     }
