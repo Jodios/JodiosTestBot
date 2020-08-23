@@ -28,11 +28,13 @@ node {
     stage('Deploy to Kubernetes'){
         sh "export KUBECONFIG=~/.kube/config"
         sh "docker image prune -af"
-        sshagent(['k8s-master']) {
-            sh "ls"
-            sh "pwd"
-            sh "kubectl get pods"
-        }
+        sh "cd"
+        sh "ls"
+        // sshagent(['k8s-master']) {
+        //     sh "ls"
+        //     sh "pwd"
+        //     sh "kubectl get pods"
+        // }
         // sh "cat ~/.kube/config"
         // https://10.0.0.18:6443/
         // sh "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
