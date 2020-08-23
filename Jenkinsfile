@@ -26,7 +26,7 @@ node {
     }
 
     stage('Deploy to Kubernetes'){
-        sh "kubectl rmi ${imageName}"
+        sh "docker rmi ${imageName}"
         sh "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
     }
 
