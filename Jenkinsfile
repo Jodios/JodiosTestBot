@@ -26,6 +26,7 @@ node {
     // }
 
     stage('Deploy to Kubernetes'){
+        sh "export KUBECONFIG=~/.kube/config"
         sh "docker image prune -af"
         sh "kubectl get pods"
         // sh "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
