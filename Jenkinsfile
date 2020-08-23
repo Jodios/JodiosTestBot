@@ -28,7 +28,7 @@ node {
     stage('Deploy to Kubernetes'){
         sh "export KUBECONFIG=~/.kube/config"
         sh "docker image prune -af"
-        sh "cat ~/.kube/config"
+        // sh "cat ~/.kube/config"
         sh "users && groups"
         sh "kubectl get pods"
         // https://10.0.0.18:6443/
