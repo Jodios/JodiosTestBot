@@ -19,7 +19,7 @@ export function onMessage(client: Discord.Client) {
         if (msg.content[0] == "!") {
             let args = msg.content.substring(1).split(' ');
             let cmd = args[0];
-            args = args.splice(1);
+            args = args.splice(1).filter(x => x!=="");
             switch (cmd.toLowerCase()) {
                 case 'mock':
                     mock(msg, (msg.channel as Discord.TextChannel));
@@ -34,10 +34,10 @@ export function onMessage(client: Discord.Client) {
                     crypto((msg.channel as Discord.TextChannel), args);
                     break;
                 case 'spam':
-                    spam( msg.mentions.users.array()[0] );
+                    spam( msg.mentions.users.array()[0], args.join(" ") );
                     break;
-                case 'test':
-                    msg.channel.send("HERE");
+                case 'info':
+                    msg.channel.send(`${process.env.botInfo}`);
                     break;
                 case 'clear':
                     clear((msg.channel as Discord.TextChannel), (msg.member as Discord.GuildMember));

@@ -18,6 +18,7 @@ node {
     def build = "${env.BUILD_NUMBER}"
     def imageName = "jodios/jodios_test_bot:${build}"
     def image
+    def botInfo = "${imageName}\nBuild Date: ${new Date()}\n"
 
     stage('Clone repository') {
         /* Let's make sure we have the repository cloned to our workspace */
@@ -28,7 +29,7 @@ node {
     stage('Build image') {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
-        image = docker.build("${imageName}", "--build-arg discordToken=${env.discordToken} .")
+        image = docker.build("${imageName}", "--build-arg discordToken=${env.discordToken} --build-arg botInfo=${botInfo} .")
     }
 
     stage('Push image') {
@@ -40,7 +41,7 @@ node {
 
     stage('Deploy to Kubernetes'){
         sh "export KUBECONFIG=~/.kube/config"
-        sh "docker image prune -af"
+        // sh "docker image prune -af"
         sshCommand remote: remote, command: "ls"
         sshCommand remote: remote, command: "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
     }
