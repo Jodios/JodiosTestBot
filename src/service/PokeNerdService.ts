@@ -34,7 +34,7 @@ export function guessName(
 ) {
   let sec: number = (new Date().getTime() - time) / 1000;
   let min: number = sec / 60;
-  if (min < 1 && actualName.toLowerCase() == guess.toLowerCase()) {
+  if ( min < 1 && actualName.toLowerCase() == guess.toLowerCase() ) {
     let rn = Math.ceil(Math.random() * insults.length - 1);
     channel.send(`<@${user}> ${insults[rn]}`);
   }

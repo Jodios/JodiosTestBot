@@ -36,8 +36,8 @@ export function onMessage(client: Discord.Client) {
                 case 'spam':
                     spam( msg.mentions.users.array()[0], args.join(" ") );
                     break;
-                case 'test':
-                    msg.channel.send("HERE");
+                case 'info':
+                    msg.channel.send(`${process.env.botInfo}`);
                     break;
                 case 'clear':
                     clear((msg.channel as Discord.TextChannel), (msg.member as Discord.GuildMember));
