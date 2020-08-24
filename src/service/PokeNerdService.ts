@@ -4,7 +4,12 @@ import axios from "axios";
 const url = "https://pokeapi.co/api/v2/pokemon/";
 let time = new Date().getTime();
 let actualName = "";
-const insults: string[] = ["You fucking nerd.", "What a nerd"];
+const insults: string[] = [
+  "You fucking nerd.", "What a nerd",
+  "Wow! You actually guessed it correctly, you incredibly sad, weird nerd. ",
+  "How did you get that? Do you live with your parents? Are you really just a big enough " +
+  "loser that you actually know the names of these pokemon by heart? What is wrong with you?"
+];
 
 export function PokeNerdService(n: number, channel: Discord.TextChannel) {
   if (45 < n && n < 55) {
