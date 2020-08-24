@@ -18,7 +18,8 @@ node {
     def build = "${env.BUILD_NUMBER}"
     def imageName = "jodios/jodios_test_bot:${build}"
     def image
-    def botInfo = "${imageName}\nBuild Date: ${new Date()}\n"
+    def botInfo = "${imageName}\\nBuild Date: ${new Date()}\\n"
+    botInfo = '"' + botInfo + '"'
 
     stage('Clone repository') {
         /* Let's make sure we have the repository cloned to our workspace */
