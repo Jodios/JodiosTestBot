@@ -5,6 +5,7 @@ import { greentext } from "../command/Greentext";
 import { crypto } from "../command/Crypto";
 import { spam } from "../command/Spam";
 import { clear } from "../command/Clear";
+import { holyAssembly } from "../command/HolyAssembly";
 import { PokeNerdService as pokeNerd, guessName } from "../service/PokeNerdService";
 
 export function onMessage(client: Discord.Client) {
@@ -41,6 +42,9 @@ export function onMessage(client: Discord.Client) {
                     break;
                 case 'clear':
                     clear((msg.channel as Discord.TextChannel), (msg.member as Discord.GuildMember));
+                    break;                
+                case 'assembly':
+                    holyAssembly( args.join(" "), (msg.channel as Discord.TextChannel), (msg.member as Discord.GuildMember));
                     break;
             }
         }
