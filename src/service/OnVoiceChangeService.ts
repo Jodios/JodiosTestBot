@@ -1,8 +1,8 @@
 import Discord, { VoiceState, VoiceChannel } from "discord.js";
 import ytdl from "ytdl-core"
 
-const joinn = "https://www.youtube.com/watch?v=ybGOT4d2Hs8";
-const leavee = 'https://www.youtube.com/watch?v=5r06heQ5HsI';
+const joinn = ["https://www.youtube.com/watch?v=ybGOT4d2Hs8"];
+const leavee = ['https://www.youtube.com/watch?v=5r06heQ5HsI','https://www.youtube.com/watch?v=XsoNZ_RfJSk'];
 
 export function onVoiceChange(client: Discord.Client){
 
@@ -10,16 +10,13 @@ export function onVoiceChange(client: Discord.Client){
 
         let botMadeChange: boolean = newState.member?.user.username == client.user?.username;
         let mute: boolean = (newState.selfMute! != oldState.selfMute!) || (newState.mute! != oldState.mute!);
-        
+        let rnjoin = Math.floor(Math.random() * joinn.length)
+        let rnleave = Math.floor(Math.random() * leavee.length)
 
         if( newState.channel?.members.size == undefined && !botMadeChange){
-            playTheme(oldState.channel as Discord.VoiceChannel, leavee);
+            playTheme(oldState.channel as Discord.VoiceChannel, leavee[rnleave]);
         }else if(!botMadeChange && !mute){
-            console.log(oldState)
-            console.log("=======================")
-            console.log(newState)
-
-            playTheme(newState.channel as Discord.VoiceChannel, joinn);
+            playTheme(newState.channel as Discord.VoiceChannel, joinn[rnjoin]);
         }
 
     })
