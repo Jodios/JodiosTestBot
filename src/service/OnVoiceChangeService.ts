@@ -8,11 +8,17 @@ export function onVoiceChange(client: Discord.Client){
 
     client.on("voiceStateUpdate", (oldState: Discord.VoiceState, newState: Discord.VoiceState) => {
 
-        let botMadeChange: boolean = newState.member?.user.username != client.user?.username;
+        let botMadeChange: boolean = newState.member?.user.username == client.user?.username;
+        let mute: boolean = (newState.selfMute! != oldState.selfMute!) || (newState.mute! != oldState.mute!);
+        
 
-        if( newState.channel?.members.size == undefined && botMadeChange){
+        if( newState.channel?.members.size == undefined && !botMadeChange){
             playTheme(oldState.channel as Discord.VoiceChannel, leavee);
-        }else if(botMadeChange){
+        }else if(!botMadeChange && !mute){
+            console.log(oldState)
+            console.log("=======================")
+            console.log(newState)
+
             playTheme(newState.channel as Discord.VoiceChannel, joinn);
         }
 
@@ -22,12 +28,16 @@ export function onVoiceChange(client: Discord.Client){
 
 async function playTheme(voiceChannel: Discord.VoiceChannel, soundUrl: string){
 
-    let connection = await voiceChannel.join();
-
-    let dispatcher =  connection.play(ytdl(soundUrl, { filter: 'audioonly' } ))
-    dispatcher.on('finish', () => {
-        voiceChannel.leave();
-        dispatcher.destroy();
-    });
+    try {
+        let connection = await voiceChannel.join();
+    
+        let dispatcher =  connection.play(ytdl(soundUrl, { filter: 'audioonly' } ))
+        dispatcher.on('finish', () => {
+            voiceChannel.leave();
+            dispatcher.destroy();
+        });
+    } catch (error) {
+        console.log(error);
+    }
     
 }

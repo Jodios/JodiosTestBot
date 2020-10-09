@@ -43,9 +43,9 @@ export function onMessage(client: Discord.Client) {
                 case 'clear':
                     clear((msg.channel as Discord.TextChannel), (msg.member as Discord.GuildMember));
                     break;                
-                case 'assembly':
-                    holyAssembly( args.join(" "), (msg.channel as Discord.TextChannel), (msg.member as Discord.GuildMember));
-                    break;
+                // case 'assembly':
+                //     holyAssembly( args.join(" "), (msg.channel as Discord.TextChannel), (msg.member as Discord.GuildMember));
+                //     break;
             }
         }
     });

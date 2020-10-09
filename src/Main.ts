@@ -4,7 +4,7 @@ import { onMessage } from "./service/OnMessageService";
 import { connect as MongoConnect } from "./command/HolyAssembly";
 import dotenv from "dotenv";
 dotenv.config();
-MongoConnect();
+// MongoConnect();
 
 let authKey = process.env.discordToken;
 console.log(`authKey = ${process.env.discordToken}`)
