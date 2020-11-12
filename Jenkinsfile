@@ -28,4 +28,5 @@ node {
     //     sshCommand remote: remote, command: "ls"
     //     sshCommand remote: remote, command: "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
     // }
+    
 }
