@@ -1,22 +1,7 @@
 node {
-    def remote = [:]
-    def jenkinsCredentials = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
-        com.cloudbees.plugins.credentials.Credentials.class,
-        Jenkins.instance,
-        null,
-        null
-    );
-    for (creds in jenkinsCredentials) {
-        if(creds.id == "test_ssh"){
-            remote.name = creds.username
-            remote.host = "10.0.0.18"
-            remote.user = creds.username
-            remote.password = creds.password
-            remote.allowAnyHosts = true
-        }
-    }
+
     def build = "${env.BUILD_NUMBER}"
-    def imageName = "jodios/jodios_test_bot:${build}"
+    def imageName = "jodios/jodios_test_bot:latest"
     def image
 
     stage('Clone repository') {
@@ -25,24 +10,23 @@ node {
         checkout scm
     }
 
-    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-        image = docker.build("${imageName}", "--build-arg discordToken=${env.discordToken} .")
-    }
+    // stage('Build image') {
+    //     /* This builds the actual image; synonymous to
+    //      * docker build on the command line */
+    //     image = docker.build("${imageName}", "--build-arg discordToken=${env.discordToken} .")
+    // }
 
-    stage('Push image') {
-        // pushing the image to dockerhub
-        docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_creds') {
-            image.push()
-        }
-    }
+    // stage('Push image') {
+    //     // pushing the image to dockerhub
+    //     withDockerRegistry(credentialsId: 'docker_hub_creds', url: 'https://registry.hub.docker.com') {
+    //         image.push()
+    //     }
+    // }
 
-    stage('Deploy to Kubernetes'){
-        sh "export KUBECONFIG=~/.kube/config"
-        // sh "docker image prune -af"
-        sshCommand remote: remote, command: "ls"
-        sshCommand remote: remote, command: "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
-    }
+    // stage('Deploy image'){
+    //     sh "export KUBECONFIG=~/.kube/config"
+    //     sshCommand remote: remote, command: "ls"
+    //     sshCommand remote: remote, command: "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
+    // }
 
 }
