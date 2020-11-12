@@ -10,12 +10,12 @@ node {
         checkout scm
     }
 
-    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-        echo "${env.discordToken}"
-        image = docker.build("${imageName}", "--build-arg discordToken=${env.discordToken} .")
-    }
+    // stage('Build image') {
+    //     /* This builds the actual image; synonymous to
+    //      * docker build on the command line */
+    //     echo "${env.discordToken}"
+    //     image = docker.build("${imageName}", "--build-arg discordToken=${env.discordToken} .")
+    // }
 
     // stage('Push image') {
     //     // pushing the image to dockerhub
