@@ -19,6 +19,8 @@ node {
     stage('Kubernetes'){
         sh 'ls -a ~'
         sh "export KUBECONFIG=~/.kube/config"
+        sh "kubectl -n prod get pods"
+        sh "echo $KUBECONFIG"
         // sshCommand remote: remote, command: "ls"
         // sshCommand remote: remote, command: "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
     }
