@@ -1,28 +1,14 @@
 node {
 
     def build = "${env.BUILD_NUMBER}"
+    def imageNameOld = "jodios/jodios_test_bot:${build}"
     def imageName = "jodios/jodios_test_bot:latest"
-    def image
+    def namespace = "prod"
 
-    // stage('Clone repository') {
-    //     /* Let's make sure we have the repository cloned to our workspace */
-
-    //     checkout scm
-    // }
-
-    // stage('Deploy image'){
-    //     sh "export KUBECONFIG=~/.kube/config"
-    //     sshCommand remote: remote, command: "ls"
-    //     sshCommand remote: remote, command: "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
-    // }
-
-    stage('Kubernetes'){
-        sh 'ls -a ~'
+    stage('Deploy to Kubernetes'){
         sh "export KUBECONFIG=~/.kube/config"
-        sh "kubectl -n prod get pods"
-        sh "echo $KUBECONFIG"
-        // sshCommand remote: remote, command: "ls"
-        // sshCommand remote: remote, command: "kubectl set image deployment/test-bot-deployment test-bot=${imageName} --record"
+        sh 'ls'
+        sh 'kubectl -n ${namespace} set image deployment/jodios-test-bot jodios-test-bot=${imageName} --record'
     }
 
 }
