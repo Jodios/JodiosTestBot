@@ -4,6 +4,7 @@ import axios from "axios";
 const url = "https://pokeapi.co/api/v2/pokemon/";
 let time = new Date().getTime();
 let actualName = "";
+let guessed = false;
 const insults: string[] = [
   "You fucking nerd.", "What a nerd",
   "Wow! You actually guessed it correctly, you incredibly sad, weird nerd. ",
@@ -12,7 +13,7 @@ const insults: string[] = [
 ];
 
 export function PokeNerdService(n: number, channel: Discord.TextChannel) {
-  if (45 < n && n < 55) {
+  if (500 < n && n < 550) {
     let pokeURL = `${url}${Math.floor(Math.random() * 806 + 1)}`;
     axios
       .get(pokeURL)
@@ -22,6 +23,7 @@ export function PokeNerdService(n: number, channel: Discord.TextChannel) {
         let image = res.data.sprites.front_default;
         channel.send("Who's that pokemon?", { files: [image] });
         console.log(actualName);
+        guessed = false;
       })
       .catch((err) => onFailed(err, pokeURL));
   }
@@ -34,9 +36,10 @@ export function guessName(
 ) {
   let sec: number = (new Date().getTime() - time) / 1000;
   let min: number = sec / 60;
-  if ( min < 1 && actualName.toLowerCase() == guess.toLowerCase() ) {
+  if ( min < 1 && actualName.toLowerCase() == guess.toLowerCase() && !guessed) {
     let rn = Math.ceil(Math.random() * insults.length - 1);
     channel.send(`<@${user}> ${insults[rn]}`);
+    guessed = true;
   }
 }
 
