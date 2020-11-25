@@ -13,7 +13,7 @@ export function onMessage(client: Discord.Client) {
     client.on('message', (msg: Discord.Message) => {
 
         if(msg.author != client.user){
-            pokeNerd(Math.random() * 100, msg.channel as Discord.TextChannel);
+            pokeNerd(Math.random() * 1000, msg.channel as Discord.TextChannel);
             guessName(msg.content, (msg.channel as Discord.TextChannel), msg.author.id);
         }
         
