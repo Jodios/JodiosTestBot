@@ -1,10 +1,8 @@
 import Discord from "discord.js";
 import { onVoiceChange } from "./service/OnVoiceChangeService";
 import { onMessage } from "./service/OnMessageService";
-import { connect as MongoConnect } from "./command/HolyAssembly";
 import dotenv from "dotenv";
 dotenv.config();
-// MongoConnect();
 
 let authKey = process.env.discordToken;
 console.log(`authKey = ${process.env.discordToken}`)
