@@ -1,0 +1,37 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: jodiosTestBotConfigMap
+  namespace: prod
+data:
+  discordToken: #{secrets.discordToken}#
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: jodios-test-bot
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jodios-test-bot
+  template:
+    metadata:
+      labels:
+        app: jodios-test-bot 
+    spec:
+      containers:
+        - name: jodios-test-bot
+          image: #{deployment.image.name}#
+          ports:
+            - name: http-api
+              containerPort: 8080
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: jodiosTestBotConfigMap
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst

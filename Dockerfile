@@ -1,7 +1,5 @@
-FROM node:12
+FROM node:14
 
-ARG discordToken
-ENV discordToken="${discordToken}"
 #create directory
 RUN mkdir -p /usr
 WORKDIR /usr/

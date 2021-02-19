@@ -1,0 +1,78 @@
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ test ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "build"
+          
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Remove docker auths
+        run: |
+          ls -a ${HOME}
+          rm -f ${HOME}/.docker/config.json
+          
+      - name: Docker Login
+        uses: docker/login-action@v1.8.0
+        with:
+          registry: https://registry.hub.docker.com
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          logout: true
+
+      - name: Check dir  
+        run: |
+          ls -a ${HOME}
+          cat ${HOME}/.docker/config.json
+          
+      - name: Docker Setup QEMU
+        uses: docker/setup-qemu-action@v1.0.1
+  
+      - name: Docker Setup Buildx
+        uses: docker/setup-buildx-action@v1.1.1
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v2.2.2
+        with:
+          push: true 
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:${{ github.run_id }}
+
+
+      // replaceing tokens in kube yaml
+      - name: Replace tokens
+        uses: cschleiden/replace-tokens@v1.0
+        with:
+          files: kube.yaml
+        env:
+          deployment.image.name: ${{ secrets.DOCKERHUB_USERNAME }}/securital:${{ github.run_id }}
+          config.typeDNA.key: ${{ secrets.discordToken }}
+
+        
+      - name: Verify kube yaml
+        run: |
+          ls -a ${HOME}
+          rm -f ${HOME}/.docker/config.json
+
+#       - name: Kubernetes CLI - kubectl
+#         # You may pin to the exact commit or the version.
+#         # uses: steebchen/kubectl@8d86812f13f42dbc67dd0ffd787cde5e1833f789
+#         uses: steebchen/kubectl@v1.0.0
+#         env:
+#           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+#         with:
+#           args: apply -f kube.yaml
+    
+    
+    
+    
