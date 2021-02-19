@@ -10,18 +10,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  # This workflow contains a single job called "build"
           
-  build:
+  build and push:
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2 
-
-      - name: Check dir  
-        run: |
-          ls -a ${HOME}
-          cat ${HOME}/.docker/config.json   
 
       - name: Docker Setup QEMU
         uses: docker/setup-qemu-action@v1
@@ -48,23 +42,15 @@ jobs:
         with:
           files: kube.yaml
         env:
-          deployment.image.name: ${{ secrets.DOCKERHUB_USERNAME }}/securital:${{ github.run_id }}
+          deployment.image.name: ${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:${{ github.run_id }}
           config.typeDNA.key: ${{ secrets.discordToken }}
 
-        
-      - name: Verify kube yaml
-        run: |
-          ls -a ${HOME}
-          rm -f ${HOME}/.docker/config.json
-
-#       - name: Kubernetes CLI - kubectl
-#         # You may pin to the exact commit or the version.
-#         # uses: steebchen/kubectl@8d86812f13f42dbc67dd0ffd787cde5e1833f789
-#         uses: steebchen/kubectl@v1.0.0
-#         env:
-#           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-#         with:
-#           args: apply -f kube.yaml
+      - name: Kubernetes CLI - kubectl
+        uses: steebchen/kubectl@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: apply -f kube.yaml
     
     
     
