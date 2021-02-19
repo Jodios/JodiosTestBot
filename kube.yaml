@@ -1,7 +1,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: jodiosTestBotConfigMap
+  name: jodiostestbotconfigmap
   namespace: prod
 data:
   discordToken: #{secrets.discordToken}#
@@ -30,7 +30,7 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: jodiosTestBotConfigMap
+                name: jodiostestbotconfigmap
           imagePullPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
