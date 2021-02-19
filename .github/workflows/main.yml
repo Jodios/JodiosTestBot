@@ -43,7 +43,7 @@ jobs:
           files: kube.yaml
         env:
           deployment.image.name: ${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:${{ github.run_id }}
-          config.typeDNA.key: ${{ secrets.discordToken }}
+          secrets.discordToken: ${{ secrets.DISCORD_KEY }}
 
       - name: Deploy
         uses: danielr1996/kubectl-action@1.0.0
