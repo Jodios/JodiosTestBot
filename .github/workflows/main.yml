@@ -42,7 +42,7 @@ on:
               tags: ${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:${{ github.run_id }}
 
 
-          // replaceing tokens in kube yaml
+          # replaceing tokens in kube yaml
           - name: Replace tokens
             uses: cschleiden/replace-tokens@v1.0
             with:
