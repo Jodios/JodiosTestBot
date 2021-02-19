@@ -46,7 +46,7 @@ jobs:
           config.typeDNA.key: ${{ secrets.discordToken }}
 
       - name: Kubernetes CLI - kubectl
-        uses: steebchen/kubectl@master
+        uses: steebchen/kubectl@v1.0.0
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         with:
