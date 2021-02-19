@@ -1,0 +1,56 @@
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+          
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2 
+
+      - name: Docker Setup QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Docker Setup Buildx
+        uses: docker/setup-buildx-action@v1
+               
+      - name: Docker Login
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v2
+        with:
+          push: true 
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:${{ github.run_id }}
+
+
+      # replaceing tokens in kube yaml
+      - name: Replace tokens
+        uses: cschleiden/replace-tokens@v1.0
+        with:
+          files: kube.yaml
+        env:
+          deployment.image.name: ${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:${{ github.run_id }}
+          secrets.discordToken: ${{ secrets.DISCORD_KEY }}
+
+      - name: Deploy
+        uses: danielr1996/kubectl-action@1.0.0
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
+          args: apply -f kube.yaml
+    
+    
+    
+    
