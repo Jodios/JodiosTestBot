@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import axios, { AxiosResponse } from "axios";
 
-const url = "https://www.reddit.com/r/greentext.json?count=10";
+var url = `https://api.pushshift.io/reddit/search/submission/?subreddit=greentext&sort=desc&sort_type=created_utc&size=1000`;
 
 /**
  * greentext is called from @OnMessageService 
@@ -21,7 +21,7 @@ export async function greentext(channel: Discord.TextChannel) {
  */
 async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel) {
     let data = response.data.data;
-    let urls: [] = data.children.map((post: any) => { return { link: post?.data?.url, comment: post?.data?.title } });
+    let urls: [] = data.map((post: any) => { return { link: post?.url, comment: post?.title } });
     let rn = Math.ceil(Math.random() * urls.length - 1)
     let randomUrl = urls[rn]['link'];
     let comment = urls[rn]['comment']
