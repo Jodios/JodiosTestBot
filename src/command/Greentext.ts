@@ -21,7 +21,8 @@ export async function greentext(channel: Discord.TextChannel) {
  */
 async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel) {
     let data = response.data.data;
-    let urls: [] = data.map((post: any) => { return { link: post?.url, comment: post?.title } });
+    let urls: {link: string, comment: string}[] = data.map((post: any) => { return { link: post?.url, comment: post?.title } });
+    urls = urls.filter(u => u.link.includes("i.redd.it"))
     let rn = Math.ceil(Math.random() * urls.length - 1)
     let randomUrl = urls[rn]['link'];
     let comment = urls[rn]['comment']
