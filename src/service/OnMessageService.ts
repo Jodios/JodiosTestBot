@@ -4,6 +4,7 @@ import { insult } from "../command/Insult";
 import { greentext } from "../command/Greentext";
 import { clear } from "../command/Clear";
 import { crypto } from "../command/Crypto";
+import { dubsChecker } from "../command/DubsChecker";
 import { getRandomImageFromBoard } from "../command/ChanBoards";
 import { PokeNerdService as pokeNerd, guessName } from "../service/PokeNerdService";
 
@@ -29,6 +30,9 @@ export function onMessage(client: Discord.Client) {
                     break;
                 case 'greentext':
                     greentext((msg.channel as Discord.TextChannel));
+                    break;
+                case 'rng':
+                    dubsChecker((msg.channel as Discord.TextChannel));
                     break;
                 case 'crypto':
                     crypto((msg.channel as Discord.TextChannel), args);
