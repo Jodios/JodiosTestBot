@@ -1,26 +1,28 @@
 import Discord from "discord.js";
-import fs from "fs";
 import path from "path";
-
+import jimp from "jimp";
 
 const basePath = path.join(__dirname, "../resources");
 const min = 10000000
 const max = 99999999
 
 export async function dubsChecker(channel: Discord.TextChannel) {
-    fs.readFile( path.join(basePath, 'dubs_1.jpg'), (err, data) => {
-        let rn = Math.floor(Math.random() * (max - min+1)+min);
-        let dubs = checkRepeatingDigits(rn);
-        if(err){
-            console.log(err.message);
-            return;
-        }
-        if(dubs != ""){
-            channel.send(`${dubs} check em \n                                                                                               ${rn}`, { files: [data] });
-        }else{
-            channel.send( rn );
-        }
-    })
+    var loadedImage: jimp;
+    let rn = Math.floor(Math.random() * (max - min+1)+min);
+    let dubs = checkRepeatingDigits(rn);
+
+    if(dubs != ""){
+        jimp.read(path.join(basePath, 'dubs_2.jpg')).then((image) => {
+            loadedImage = image;
+            return jimp.loadFont(jimp.FONT_SANS_32_BLACK);
+        }).then((font) => {
+            loadedImage.print(font, 680,10, rn).getBuffer(jimp.MIME_PNG, (err, buffer) => {
+                channel.send(`${dubs} check em`, { files: [buffer] });
+            })
+        })
+    }else{
+        channel.send( rn );
+    }
 }
 
 const checkRepeatingDigits = (n: number): string => {
