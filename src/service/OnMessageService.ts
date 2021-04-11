@@ -31,7 +31,7 @@ export function onMessage(client: Discord.Client) {
                 case 'greentext':
                     greentext((msg.channel as Discord.TextChannel));
                     break;
-                case '!rng':
+                case 'rng':
                     dubsChecker((msg.channel as Discord.TextChannel));
                     break;
                 case 'crypto':
