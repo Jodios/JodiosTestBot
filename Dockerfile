@@ -5,7 +5,8 @@ RUN mkdir -p /usr
 WORKDIR /usr/
 
 COPY package.json ./
-RUN npm install
+COPY yarn.lock ./
+RUN yarn install
 COPY . ./
 RUN ls src
 
