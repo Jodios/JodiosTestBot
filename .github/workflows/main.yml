@@ -25,9 +25,6 @@ jobs:
       - name: Build and Test Project
         run: yarn build
 
-      - name: Build and Test Project
-        run: ls
-
       - name: Docker Setup QEMU
         uses: docker/setup-qemu-action@v1
 
