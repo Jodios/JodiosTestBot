@@ -6,7 +6,7 @@ const basePath = path.join(__dirname, "../resources");
 const min = 10000000
 const max = 99999999
 
-export async function dubsChecker(channel: Discord.TextChannel) {
+export default async function dubsChecker(channel: Discord.TextChannel) {
     var loadedImage: jimp;
     let rn = Math.floor(Math.random() * (max - min+1)+min);
     let dubs = checkRepeatingDigits(rn);
@@ -25,7 +25,7 @@ export async function dubsChecker(channel: Discord.TextChannel) {
     }
 }
 
-const checkRepeatingDigits = (n: number): string => {
+export const checkRepeatingDigits = (n: number): string => {
 
     let consecutiveDigits = 0;
     let previous = n%10;

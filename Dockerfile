@@ -1,14 +1,12 @@
-FROM node:14
+FROM node:14-alpine
 
-#create directory
-RUN mkdir -p /usr
-WORKDIR /usr/
+WORKDIR /app
 
-COPY package.json ./
-COPY yarn.lock ./
-RUN yarn install
 COPY . ./
-RUN ls src
+
+RUN yarn install
+RUN yarn build
+RUN ls
 
 EXPOSE 8080
-CMD ["npm", "start"] 
+CMD ["yarn", "start"]

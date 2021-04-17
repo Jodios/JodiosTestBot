@@ -4,7 +4,7 @@ import { insult } from "../command/Insult";
 import { greentext } from "../command/Greentext";
 import { clear } from "../command/Clear";
 import { crypto } from "../command/Crypto";
-import { dubsChecker } from "../command/DubsChecker";
+import dubsChecker from "../command/DubsChecker";
 import { getRandomImageFromBoard } from "../command/ChanBoards";
 import { PokeNerdService as pokeNerd, guessName } from "../service/PokeNerdService";
 
