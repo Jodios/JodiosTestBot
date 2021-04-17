@@ -19,12 +19,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2 
 
-      - name: Install Dependencies
-        run: yarn install
-
-      - name: Build and Test Project
-        run: yarn build
-
       - name: Docker Setup QEMU
         uses: docker/setup-qemu-action@v1
 

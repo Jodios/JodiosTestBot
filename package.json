@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --respawn src/main/Main.ts",
     "start": "node build/main/Main.js",
     "test": "mocha -r ts-node/register src/test/**/*.spec.ts",
-    "build": "tsc && cp -R src/main/resources build/main/ && mocha build/test/**/*.spec.js"
+    "build": "tsc && cp -R src/main/resources build/main/"
   },
   "author": "",
   "license": "ISC",
