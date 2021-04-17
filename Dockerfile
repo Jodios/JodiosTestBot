@@ -2,11 +2,11 @@ FROM node:14-alpine
 
 WORKDIR /app
 
-COPY . ./
+COPY ./build ./build
+COPY ./package.json ./
+COPY ./yarn.lock ./
 
-## INITALLY BUILDING THE PROJECT 
-RUN yarn install
-RUN yarn build
+RUN yarn install --prod
 
 EXPOSE 8080
 CMD ["yarn", "start"]
