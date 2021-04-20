@@ -21,7 +21,7 @@ export async function crypto(channel: Discord.TextChannel, args: string[]) {
     });
     data = data.data.prices.map((i: number[]) => i[1]);
 
-    let imageBuffer: Buffer = await createGraph(data, channel);
+    let imageBuffer: Buffer = await createGraph(data, channel, coin);
     data = await coingeckoClient.simple.price({
         ids: [coin],
         vs_currencies: ['usd']
@@ -31,7 +31,7 @@ export async function crypto(channel: Discord.TextChannel, args: string[]) {
 
 }
 
-const createGraph = async (yAxis: number[], channel: Discord.TextChannel): Promise<Buffer> => {
+const createGraph = async (yAxis: number[], channel: Discord.TextChannel, coin: string): Promise<Buffer> => {
     return new Promise((resolve, reject) => {
 
         let xAxis: number[] = []
@@ -39,7 +39,39 @@ const createGraph = async (yAxis: number[], channel: Discord.TextChannel): Promi
             xAxis.push(i + 1);
         }
 
-        const figure = { data: [{ x: xAxis, y: yAxis, type: "line" }] };
+        var layout = {
+            title: {
+                text:coin.concat(' Price in the Last 48 Hours'),
+                font: {
+                    family: 'Courier New, monospace',
+                    size: 24
+                },
+                xref: 'paper',
+                x: 0.05,
+            },
+            xaxis: {
+                title: {
+                    text: 'Time (Hours)',
+                    font: {
+                        family: 'Courier New, monospace',
+                        size: 18,
+                        color: '#7f7f7f'
+                    }
+                },
+            },
+            yaxis: {
+                title: {
+                    text: 'Price (USD)',
+                    font: {
+                        family: 'Courier New, monospace',
+                        size: 18,
+                        color: '#7f7f7f'
+                    }
+                }
+            }
+        };
+
+        const figure = { data: [{ x: xAxis, y: yAxis, type: "line" }], layout: layout };
         var imgOpts = {
             format: 'png',
             width: 1000,
