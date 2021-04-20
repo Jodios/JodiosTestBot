@@ -5,6 +5,7 @@ metadata:
   namespace: prod
 data:
   discordToken: #{secrets.discordToken}#
+  plotlyToken: #{secrets.plotlyToken}#
 ---
 kind: Deployment
 apiVersion: apps/v1

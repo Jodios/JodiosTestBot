@@ -1,12 +1,13 @@
+import dotenv from "dotenv";
+dotenv.config();
 import Discord from "discord.js";
 import { onVoiceChange } from "./service/OnVoiceChangeService";
 import { onMessage } from "./service/OnMessageService";
-import dotenv from "dotenv";
 import figlet from "figlet";
-dotenv.config();
 
 let authKey = process.env.discordToken;
 console.log(`authKey = ${process.env.discordToken}`)
+console.log(`plotlyToken = ${process.env.plotlyToken}`);
 
 // Initialize Discord Bot
 let client = new Discord.Client();

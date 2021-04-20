@@ -3,3 +3,4 @@ auth.json
 node_modules
 INFO.json
 build
+*.log
