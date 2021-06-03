@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
 import Discord from "discord.js";
-import { onVoiceChange } from "./service/OnVoiceChangeService";
 import { onMessage } from "./service/OnMessageService";
 import figlet from "figlet";
 

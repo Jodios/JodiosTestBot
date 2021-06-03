@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import Discord, { Message } from "discord.js";
 import { mock } from "../command/Mock";
 import { insult } from "../command/Insult";
 import { greentext } from "../command/Greentext";
@@ -7,6 +7,7 @@ import { crypto } from "../command/Crypto";
 import dubsChecker from "../command/DubsChecker";
 import { getRandomImageFromBoard } from "../command/ChanBoards";
 import { PokeNerdService as pokeNerd, guessName } from "../service/PokeNerdService";
+import { onVoiceChange } from "../service/OnVoiceChangeService";
 
 export function onMessage(client: Discord.Client) {
 
@@ -44,8 +45,26 @@ export function onMessage(client: Discord.Client) {
                     getRandomImageFromBoard((msg.channel as Discord.TextChannel), "/wg/");
                 case 'chan':
                     getRandomImageFromBoard((msg.channel as Discord.TextChannel), args[0]+"/");
+                case 'topkek':
+                    if(msg.member?.voice.channel){
+                        joinChat(msg.member.voice.channel).then(connection => {
+                            onVoiceChange(client, connection);
+                        })
+                    }
             }
         }
     });
 
+}
+
+async function joinChat(voiceChannel: Discord.VoiceChannel): Promise<Discord.VoiceConnection>{
+    return new Promise(async(resolve, reject) => {
+        try {
+            let connection = await voiceChannel.join();
+            resolve(connection);
+        } catch (error) {
+            console.log(error);
+            reject(error);
+        }
+    });
 }
