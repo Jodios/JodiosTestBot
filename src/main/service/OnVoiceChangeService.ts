@@ -1,40 +1,55 @@
 import Discord, { VoiceState, VoiceChannel } from "discord.js";
-import ytdl from "ytdl-core"
+import path from "path";
 
-const joinn = ["https://www.youtube.com/watch?v=ybGOT4d2Hs8"];
-const leavee = ['https://www.youtube.com/watch?v=5r06heQ5HsI','https://www.youtube.com/watch?v=XsoNZ_RfJSk'];
+const ree = path.join(__dirname, "../resources", "ree.mp3");
 
-export function onVoiceChange(client: Discord.Client){
+let player: Discord.StreamDispatcher|undefined = undefined;
 
-    client.on("voiceStateUpdate", (oldState: Discord.VoiceState, newState: Discord.VoiceState) => {
+export const enterChat = (client: Discord.Client, voiceChannel: Discord.VoiceChannel|null|undefined, textChannel: Discord.TextChannel) => {
 
-        let botMadeChange: boolean = newState.member?.user.username == client.user?.username;
-        let mute: boolean = (newState.selfMute! != oldState.selfMute!) || (newState.mute! != oldState.mute!);
-        let rnjoin = Math.floor(Math.random() * joinn.length)
-        let rnleave = Math.floor(Math.random() * leavee.length)
+    joinChat(voiceChannel).then(connection => {
 
-        if( newState.channel?.members.size == undefined && !botMadeChange){
-            playTheme(oldState.channel as Discord.VoiceChannel, leavee[rnleave]);
-        }else if(!botMadeChange && !mute){
-            playTheme(newState.channel as Discord.VoiceChannel, joinn[rnjoin]);
-        }
-
-    })
-
-}
-
-async function playTheme(voiceChannel: Discord.VoiceChannel, soundUrl: string){
-
-    try {
-        let connection = await voiceChannel.join();
-    
-        let dispatcher =  connection.play(ytdl(soundUrl, { filter: 'audioonly' } ))
-        dispatcher.on('finish', () => {
-            voiceChannel.leave();
-            dispatcher.destroy();
+        client.on("guildMemberSpeaking", (user, speaking) => {
+            if (speaking.bitfield == 1 && !player) {
+                player = connection.play(ree, { "volume": 100 });
+            } else if (speaking.bitfield == 0) {
+                if (player) {
+                    player.end();
+                    player = undefined;
+                }
+            }
         });
-    } catch (error) {
-        console.log(error);
-    }
     
+    }).catch(reason => {
+        textChannel.send(reason);
+    });
+
+
 }
+
+export const leaveChat = (client: Discord.Client, guild: Discord.Guild, textChannel: Discord.TextChannel) => {
+    if(guild.voice){
+        guild.voice.channel?.leave();
+    }else{
+        textChannel.send("I'm not even in voice chat, dumbass");
+    }
+}
+
+async function joinChat(voiceChannel: Discord.VoiceChannel|null|undefined): Promise<Discord.VoiceConnection> {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (voiceChannel) {
+                let connection = await voiceChannel.join();
+                resolve(connection);
+            }
+            else {
+                reject("You have to be in a voice channel");
+            }
+        } catch (error) {
+            console.log(error);
+            reject(error);
+        }
+    });
+}
+
+
