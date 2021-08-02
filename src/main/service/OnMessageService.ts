@@ -7,6 +7,7 @@ import { crypto } from "../command/Crypto";
 import dubsChecker from "../command/DubsChecker";
 import { getRandomImageFromBoard } from "../command/ChanBoards";
 import { PokeNerdService as pokeNerd, guessName } from "../service/PokeNerdService";
+import { quoteKingTerry } from "../command/KingTerry";
 
 export function onMessage(client: Discord.Client) {
 
@@ -33,6 +34,9 @@ export function onMessage(client: Discord.Client) {
                     break;
                 case 'rng':
                     dubsChecker((msg.channel as Discord.TextChannel));
+                    break;
+                case 'kingterry':
+                    quoteKingTerry( (msg.channel as Discord.TextChannel) );
                     break;
                 case 'crypto':
                     crypto((msg.channel as Discord.TextChannel), args);
