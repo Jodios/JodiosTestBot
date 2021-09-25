@@ -42,7 +42,7 @@ jobs:
         with:
           context: ./
           push: true 
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:${{ github.run_id }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:${{ github.run_id }},${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:latest
 
 
       # replaceing tokens in kube yaml
@@ -51,7 +51,7 @@ jobs:
         with:
           files: kube.yaml
         env:
-          deployment.image.name: ${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:${{ github.run_id }}
+          deployment.image.name: ${{ secrets.DOCKERHUB_USERNAME }}/jodios_test_bot:latest
           secrets.discordToken: ${{ secrets.DISCORD_KEY }}
           secrets.plotlyToken: ${{ secrets.PLOTLY_TOKEN }}
 
