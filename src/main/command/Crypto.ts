@@ -3,7 +3,7 @@ const CoinGecko = require("coingecko-api");
 import axios from "axios";
 
 
-const plotURL = "http://graphing.jodios.com/simpleGraph"
+const plotURL = "https://graphing.jodios.com/simpleGraph"
 
 const coingeckoClient = new CoinGecko();
 
