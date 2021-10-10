@@ -9,10 +9,20 @@ import { getRandomImageFromBoard } from "../command/ChanBoards";
 import { PokeNerdService as pokeNerd, guessName } from "../service/PokeNerdService";
 import { quoteKingTerry } from "../command/KingTerry";
 import { enterChat, leaveChat } from "../service/OnVoiceChangeService";
+import path from "path";
+
+const basePath = path.join(__dirname, "../resources");
+const bideoName = "duke.mp4"
+const maxLength = 40;
 
 export function onMessage(client: Discord.Client) {
 
     client.on('message', (msg: Discord.Message) => {
+
+        let messageLength = msg.content.split(" ").length;
+        if (messageLength >= maxLength){
+            msg.channel.send({ files: [path.join(basePath, bideoName)] });
+        } 
 
         if (msg.author != client.user) {
             pokeNerd(Math.random() * 1000, msg.channel as Discord.TextChannel);
