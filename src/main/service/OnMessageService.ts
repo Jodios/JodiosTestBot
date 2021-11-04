@@ -10,12 +10,17 @@ import { PokeNerdService as pokeNerd, guessName } from "../service/PokeNerdServi
 import { quoteKingTerry } from "../command/KingTerry";
 import { enterChat, leaveChat } from "../service/OnVoiceChangeService";
 import path from "path";
+import { FirebaseApp } from "firebase/app";
+import { getStorage, FirebaseStorage } from "firebase/storage";
 
 const basePath = path.join(__dirname, "../resources");
 const bideoName = "duke.mp4"
 const maxLength = 40;
 
-export function onMessage(client: Discord.Client) {
+export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
+
+    // let storage: firebase.storage.Storage = firebaseApp.storage("gs://jodiostestbot.appspot.com");
+    let storage: FirebaseStorage = getStorage(firebaseApp);
 
     client.on('message', (msg: Discord.Message) => {
 
@@ -41,7 +46,7 @@ export function onMessage(client: Discord.Client) {
                     insult(msg, (msg.channel as Discord.TextChannel));
                     break;
                 case 'greentext':
-                    greentext((msg.channel as Discord.TextChannel));
+                    greentext((msg.channel as Discord.TextChannel), storage);
                     break;
                 case 'rng':
                     dubsChecker((msg.channel as Discord.TextChannel));
