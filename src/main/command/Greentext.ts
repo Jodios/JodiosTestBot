@@ -29,7 +29,6 @@ async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, 
     let comment = urls[rn]['comment']
 
     let extension = randomUrl.split("\/").filter((val, index) => val !== "")[2].split(".")[1];
-    console.log(extension);
     let name = Math.floor(new Date().getTime() / 1000);
     let reference: StorageReference = ref(storage, `/jodiostestbot/greentext/${name}.${extension}`);
     

@@ -3,7 +3,7 @@
       "resolveJsonModule": true,
       "target": "es5",
       "module": "commonjs",
-      "lib": ["ES6"],
+      "lib": ["ES6", "DOM"],
       "outDir": "./build",
       "rootDir": "./src",
       "strict": true,
