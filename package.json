@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "coingecko-api": "^1.0.10",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
