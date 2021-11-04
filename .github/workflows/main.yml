@@ -21,6 +21,9 @@ jobs:
 
       - name: Install Dependencies
         run: yarn install
+      
+      - name: Write firebase config
+        run: echo '${{secrets.FIREBASE_CONFIG}}' >> ./src/main/firebase.json
 
       - name: Build and Test Project
         run: yarn build
@@ -36,9 +39,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-      - name: Write firebase config
-        run: echo '${{secrets.FIREBASE_CONFIG}}' >> ./src/main/firebase.json
      
       - name: Build and push Docker images
         uses: docker/build-push-action@v2
