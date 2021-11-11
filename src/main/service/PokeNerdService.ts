@@ -8,7 +8,6 @@ let time = new Date().getTime();
 let actualName = "";
 let guessed = false;
 const referenceName = "pokemonCache";
-const imageDownloadUrl = "https://firebasestorage.googleapis.com/v0/b/jodiostestbot.appspot.com/o/pokemonCache%2F546.png?alt=media&token=267f51b2-8901-488b-8564-785205990e71";
 const insults: string[] = [
   "You fucking nerd.",
   "What a nerd",
