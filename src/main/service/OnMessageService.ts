@@ -12,6 +12,7 @@ import { enterChat, leaveChat } from "../service/OnVoiceChangeService";
 import path from "path";
 import { FirebaseApp } from "firebase/app";
 import { getStorage, FirebaseStorage } from "firebase/storage";
+import { getFirestore, Firestore } from "firebase/firestore";
 
 const basePath = path.join(__dirname, "../resources");
 const bideoName = "duke.mp4"
@@ -21,6 +22,8 @@ export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
 
     // let storage: firebase.storage.Storage = firebaseApp.storage("gs://jodiostestbot.appspot.com");
     let storage: FirebaseStorage = getStorage(firebaseApp);
+    let firestore: Firestore = getFirestore(firebaseApp);
+
 
     client.on('message', (msg: Discord.Message) => {
 
@@ -30,7 +33,7 @@ export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
         } 
 
         if (msg.author != client.user) {
-            pokeNerd(Math.random() * 1000, msg.channel as Discord.TextChannel);
+            pokeNerd(Math.random() * 1000, msg.channel as Discord.TextChannel, firestore, storage);
             guessName(msg.content, (msg.channel as Discord.TextChannel), msg.author.id);
         }
 
