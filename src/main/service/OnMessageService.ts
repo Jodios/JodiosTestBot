@@ -1,4 +1,4 @@
-import Discord, { Message } from "discord.js";
+import Discord from "discord.js";
 import { mock } from "../command/Mock";
 import { insult } from "../command/Insult";
 import { greentext } from "../command/Greentext";
@@ -6,7 +6,7 @@ import { clear } from "../command/Clear";
 import { crypto } from "../command/Crypto";
 import dubsChecker from "../command/DubsChecker";
 import { getRandomImageFromBoard } from "../command/ChanBoards";
-import { PokeNerdService as pokeNerd, guessName } from "../service/PokeNerdService";
+import { PokeNerdService as pokeNerd, guessName, scoreBoard } from "../service/PokeNerdService";
 import { quoteKingTerry } from "../command/KingTerry";
 import { enterChat, leaveChat } from "../service/OnVoiceChangeService";
 import path from "path";
@@ -20,7 +20,6 @@ const maxLength = 40;
 
 export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
 
-    // let storage: firebase.storage.Storage = firebaseApp.storage("gs://jodiostestbot.appspot.com");
     let storage: FirebaseStorage = getStorage(firebaseApp);
     let firestore: Firestore = getFirestore(firebaseApp);
 
@@ -34,7 +33,7 @@ export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
 
         if (msg.author != client.user) {
             pokeNerd(Math.random() * 1000, msg.channel as Discord.TextChannel, firestore, storage);
-            guessName(msg.content, (msg.channel as Discord.TextChannel), msg.author.id);
+            guessName(msg.content, (msg.channel as Discord.TextChannel), msg.author, firestore);
         }
 
         if (msg.content[0] == "!") {
@@ -74,6 +73,9 @@ export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
                     break;
                 case 'gtfo':
                     leaveChat(client, msg.guild as Discord.Guild, msg.channel as Discord.TextChannel);
+                    break;
+                case 'pokescore':
+                    scoreBoard(msg.channel as Discord.TextChannel, firestore);
                     break;
             }
         }
