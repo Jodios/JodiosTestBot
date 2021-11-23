@@ -8,7 +8,7 @@ let time = new Date().getTime();
 let actualName = "";
 let guessed = false;
 const cacheReferenceName = "pokemonCache";
-const scoreboardReferenceName = "pokemonScoreBoard";
+const scoreboardReferenceName = "scoreBoards/pokemon";
 const insults: string[] = [
   "You fucking nerd.",
   "What a nerd",
@@ -61,10 +61,6 @@ const saveImageToFirebase = (imageUrl: string, pokemonNumber: string, actualName
     let attachement = new Discord.MessageAttachment(buffer, `${pokemonNumber}.png`);
     channel.send("Who's that pokemon?", attachement);
     uploadBytes(reference, buffer).then(async (value: UploadResult) => {
-      let data = {
-        name: actualName, imageUrl: await getDownloadURL(reference), fulldata
-      };
-
 
       setDoc(docRef, {
         base_experience: fulldata.base_experience,
@@ -130,7 +126,7 @@ export async function guessName(guess: string, channel: Discord.TextChannel, use
 
   let sec: number = (new Date().getTime() - time) / 1000;
   let min: number = sec / 60;
-  let docRef: DocumentReference<DocumentData> = doc(firestore, `${scoreboardReferenceName}/${channel.guild}/users/${user.id}/`);
+  let docRef: DocumentReference<DocumentData> = doc(firestore, `${scoreboardReferenceName}/${channel.guild}/${user.id}/`);
   let docSnapshot = await getDoc(docRef);
   if (min < 1 && actualName.toLowerCase() == guess.toLowerCase() && !guessed) {
   if (docSnapshot.exists()) {
@@ -152,7 +148,7 @@ export async function guessName(guess: string, channel: Discord.TextChannel, use
 }
 
 export const scoreBoard = async(channel: Discord.TextChannel, firestore: Firestore) => {
-  let collectionRef: CollectionReference<DocumentData> = collection(firestore, `${scoreboardReferenceName}/${channel.guild}/users`);
+  let collectionRef: CollectionReference<DocumentData> = collection(firestore, `${scoreboardReferenceName}/${channel.guild}`);
   let collectionSnapshot: QuerySnapshot<DocumentData> = await getDocs(collectionRef);
   let users = collectionSnapshot.docs.sort((a, b) => (a.data()['score'] < b.data()['score']) ? 1 : -1).map(user => {
     return { name: user.data()['name'], value: user.data()['score'] }
