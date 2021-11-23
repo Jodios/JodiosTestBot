@@ -13,7 +13,7 @@ export default async function dubsChecker(channel: Discord.TextChannel, user: Di
     let rn = Math.floor(Math.random() * (max - min+1)+min);
     let dubs = checkRepeatingDigits(rn);
     if(dubs === "" && user.username==="jodios"){
-        for(var i = 0; i < 6; i++){
+        for(var i = 0; i < 2; i++){
             rn = Math.floor(Math.random() * (max - min+1)+min); 
             dubs = checkRepeatingDigits(rn);
             if(dubs!=="") break;
