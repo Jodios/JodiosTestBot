@@ -16,14 +16,14 @@ export default async function dubsChecker(channel: Discord.TextChannel, user: Di
     var loadedImage: jimp;
     let rn = Math.floor(Math.random() * (max - min + 1) + min);
     let dubs = checkRepeatingDigits(rn);
-    if (dubs === "" && user.username in rollingAdmins) {
+    if (dubs && user.username in rollingAdmins) {
         for (var i = 0; i < rollingAdmins[user.username]; i++) {
             rn = Math.floor(Math.random() * (max - min + 1) + min);
             dubs = checkRepeatingDigits(rn);
-            if (dubs !== "") break;
+            if (dubs) break;
         }
     }
-    if (dubs != "") {
+    if (dubs) {
         jimp.read(path.join(basePath, 'dubs_2.jpg')).then((image) => {
             loadedImage = image;
             return jimp.loadFont(jimp.FONT_SANS_32_BLACK);
