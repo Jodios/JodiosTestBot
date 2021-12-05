@@ -31,9 +31,9 @@ async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, 
     let extension = randomUrl.split("\/").filter((val, index) => val !== "")[2].split(".")[1];
     let name = Math.floor(new Date().getTime() / 1000);
     let reference: StorageReference = ref(storage, `/jodiostestbot/greentext/${name}.${extension}`);
-    
+
     console.log(`Getting image from: ${randomUrl}`);
-    axios.get(randomUrl, {responseType: 'arraybuffer'}).then(res => {
+    axios.get(randomUrl, { responseType: 'arraybuffer' }).then(res => {
         let buffer = Buffer.from(res.data, "utf-8");
         uploadBytes(reference, buffer).then(value => {
             let attachement = new Discord.MessageAttachment(buffer, `${name}.${extension}`)

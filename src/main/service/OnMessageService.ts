@@ -28,9 +28,9 @@ export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
     client.on('message', (msg: Discord.Message) => {
 
         let messageLength = msg.content.split(" ").length;
-        if (messageLength >= maxLength){
+        if (messageLength >= maxLength) {
             msg.channel.send({ files: [path.join(basePath, bideoName)] });
-        } 
+        }
 
         if (msg.author != client.user) {
             pokeNerd(Math.random() * 1000, msg.channel as Discord.TextChannel, firestore, storage);
@@ -55,7 +55,7 @@ export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
                     dubsChecker((msg.channel as Discord.TextChannel), msg.author, firestore);
                     break;
                 case 'kingterry':
-                    quoteKingTerry( (msg.channel as Discord.TextChannel) );
+                    quoteKingTerry((msg.channel as Discord.TextChannel));
                     break;
                 case 'crypto':
                     crypto((msg.channel as Discord.TextChannel), args);

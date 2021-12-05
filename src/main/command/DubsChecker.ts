@@ -1,19 +1,23 @@
 import Discord from "discord.js";
 import path from "path";
 import jimp from "jimp";
-import { getFirestore, Firestore, doc, DocumentReference, DocumentData, setDoc, getDoc, CollectionReference, QuerySnapshot, collection, getDocs } from "firebase/firestore";
+import { rollingAdmins } from "../resources/config";
+import { Firestore, doc, DocumentReference, DocumentData, setDoc, getDoc, CollectionReference, QuerySnapshot, collection, getDocs } from "firebase/firestore";
 
 const basePath = path.join(__dirname, "../resources");
 const min = 10000000
 const max = 99999999
+const repeatingDigitsMap: { [key: number]: string } = {
+    2: "dubs", 3: "trips", 4: "quads", 5: "quints"
+}
 
 export default async function dubsChecker(channel: Discord.TextChannel, user: Discord.User, firestore: Firestore) {
     let docRef: DocumentReference<DocumentData> = doc(firestore, `scoreBoards/dubs/${channel.guild}/${user.id}`)
     var loadedImage: jimp;
     let rn = Math.floor(Math.random() * (max - min + 1) + min);
     let dubs = checkRepeatingDigits(rn);
-    if (dubs === "" && user.username === "jodios") {
-        for (var i = 0; i < 2; i++) {
+    if (dubs === "" && user.username in rollingAdmins) {
+        for (var i = 0; i < rollingAdmins[user.username]; i++) {
             rn = Math.floor(Math.random() * (max - min + 1) + min);
             dubs = checkRepeatingDigits(rn);
             if (dubs !== "") break;
@@ -38,7 +42,7 @@ export default async function dubsChecker(channel: Discord.TextChannel, user: Di
                 }
                 setDoc(docRef, data);
             } else {
-                setDoc(docRef, { [dubs]: 1, name: user.username })
+                setDoc(docRef, { [dubs]: 1, name: user.username, iconUrl: user.avatarURL })
             }
         });
     } else {
@@ -53,7 +57,6 @@ export const checkRepeatingDigits = (n: number): string => {
     n = Math.floor(n / 10);
     let current = 0;
 
-
     while (n > 0) {
         current = n % 10;
         if (current == previous) consecutiveDigits += 1;
@@ -62,46 +65,22 @@ export const checkRepeatingDigits = (n: number): string => {
         n = Math.floor(n / 10);
     }
     consecutiveDigits = consecutiveDigits > 0 ? consecutiveDigits + 1 : 0;
-    switch (consecutiveDigits) {
-        case 2:
-            return "dubs";
-            break;
-        case 3:
-            return "trips";
-            break;
-        case 4:
-            return "quads";
-            break;
-        case 5:
-            return "quints";
-            break;
-        default:
-            return ""
-    }
+    return repeatingDigitsMap[consecutiveDigits];
 }
 
 export const dubsScoreBoard = async (channel: Discord.TextChannel, firestore: Firestore) => {
     let collectionRef: CollectionReference<DocumentData> = collection(firestore, `scoreBoards/dubs/${channel.guild}`);
     let collectionSnapshot: QuerySnapshot<DocumentData> = await getDocs(collectionRef);
-    let users = collectionSnapshot.docs.sort((a, b) => (a.data()['score'] < b.data()['score']) ? 1 : -1).map(user => {
-        var data = user.data()
-        var name = data.name
-        var value = ""
-        if (data.dubs !== undefined){
-          value += "dubs: " + data.dubs + "\n"
+    collectionSnapshot.docs.sort((a, b) => (a.data()['score'] < b.data()['score']) ? 1 : -1).map(user => {
+        var fields: Discord.EmbedFieldData[] = []
+        for (const k in user.data()) {
+            if (k === "name" || k === "iconUrl") continue;
+            fields.push({ name: k, value: user.data()[k] })
         }
-        if (data.trips !== undefined){
-          value += "trips: " + data.trips + "\n"
-        }
-        if (data.quads !== undefined){
-          value += "quads: " + data.quads + "\n"
-        }
-        if (data.quints !== undefined){
-          value += "quints: " + data.quints + "\n"
-        }
-
-        return { name, value }
-    });
-    let embed = new Discord.MessageEmbed().setColor(0x4286f4).addFields(users);
-    channel.send(embed);
+        var embed = new Discord.MessageEmbed().setColor(0x4286f4);
+        embed.setAuthor(user.data()['name'], user.data()['iconUrl'], user.data()['iconUrl'])
+        embed.addFields(fields)
+        channel.send(embed)
+        return embed;
+    })
 }

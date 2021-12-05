@@ -7,7 +7,7 @@ let imageBaseUrl = "https://i.4cdn.org";
 export async function getRandomImageFromBoard(channel: Discord.TextChannel, board: string) {
     console.log(board);
 
-    let randomPage = Math.ceil( Math.random() * 10 );
+    let randomPage = Math.ceil(Math.random() * 10);
     let url = baseUrl + board + randomPage + ".json"
     axios.get(url).then(res => onSuccessfulGetThreads(res, channel, board)).catch(onError);
 
@@ -26,11 +26,11 @@ async function onSuccessfulGetPosts(response: AxiosResponse, channel: Discord.Te
     let data = response.data;
     let posts: [] = data.posts!;
     //@ts-ignore
-    posts = posts.filter(post => post['filename']!=undefined&&post['tim']!=undefined&&post['ext']!=undefined);
+    posts = posts.filter(post => post['filename'] != undefined && post['tim'] != undefined && post['ext'] != undefined);
     let randomPost = posts[Math.floor(Math.random() * posts.length)]
-    let imageUrl = imageBaseUrl + board  + randomPost['tim'] + randomPost['ext'];
+    let imageUrl = imageBaseUrl + board + randomPost['tim'] + randomPost['ext'];
     console.log(`Getting image from: ${imageUrl}`);
-    channel.send("https://boards.4chan.org"+board+"thread/"+threadNumber, { files: [imageUrl] });
+    channel.send("https://boards.4chan.org" + board + "thread/" + threadNumber, { files: [imageUrl] });
 }
 
 function onError(err: Error) {

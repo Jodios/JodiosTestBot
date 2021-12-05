@@ -2,6 +2,7 @@ import Discord from "discord.js";
 import axios from "axios";
 import { FirebaseStorage, StorageReference, uploadBytes, ref, UploadResult, getDownloadURL } from "firebase/storage";
 import { Firestore, doc, setDoc, DocumentData, DocumentReference, CollectionReference, collection, getDoc, getDocs, QuerySnapshot } from "firebase/firestore";
+import { insults } from "../resources/config";
 
 const url = "https://pokeapi.co/api/v2/pokemon/";
 let time = new Date().getTime();
@@ -9,13 +10,6 @@ let actualName = "";
 let guessed = false;
 const cacheReferenceName = "pokemonCache";
 const scoreboardReferenceName = "scoreBoards/pokemon";
-const insults: string[] = [
-  "You fucking nerd.",
-  "What a nerd",
-  "Wow! You actually guessed it correctly, you incredibly sad, weird nerd. ",
-  "How did you get that? Do you live with your parents? Are you really just a big enough " +
-  "loser that you actually know the names of these pokemon by heart? What is wrong with you?",
-];
 
 /**
  * This method is called any time a message is sent.
@@ -129,17 +123,17 @@ export async function guessName(guess: string, channel: Discord.TextChannel, use
   let docRef: DocumentReference<DocumentData> = doc(firestore, `${scoreboardReferenceName}/${channel.guild}/${user.id}/`);
   let docSnapshot = await getDoc(docRef);
   if (min < 1 && actualName.toLowerCase() == guess.toLowerCase() && !guessed) {
-  if (docSnapshot.exists()) {
-    setDoc(docRef, {
-      name: docSnapshot.data()['name'],
-      score: docSnapshot.data()['score']+1
-    })
-  } else {
-    setDoc(docRef, {
-      name: user.username,
-      score: 1
-    })
-  }
+    if (docSnapshot.exists()) {
+      setDoc(docRef, {
+        name: docSnapshot.data()['name'],
+        score: docSnapshot.data()['score'] + 1
+      })
+    } else {
+      setDoc(docRef, {
+        name: user.username,
+        score: 1
+      })
+    }
     let rn = Math.ceil(Math.random() * insults.length - 1);
     channel.send(`<@${user.id}> ${insults[rn]}`);
     guessed = true;
@@ -147,7 +141,7 @@ export async function guessName(guess: string, channel: Discord.TextChannel, use
 
 }
 
-export const scoreBoard = async(channel: Discord.TextChannel, firestore: Firestore) => {
+export const scoreBoard = async (channel: Discord.TextChannel, firestore: Firestore) => {
   let collectionRef: CollectionReference<DocumentData> = collection(firestore, `${scoreboardReferenceName}/${channel.guild}`);
   let collectionSnapshot: QuerySnapshot<DocumentData> = await getDocs(collectionRef);
   let users = collectionSnapshot.docs.sort((a, b) => (a.data()['score'] < b.data()['score']) ? 1 : -1).map(user => {
