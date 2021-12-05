@@ -68,7 +68,26 @@ export const checkRepeatingDigits = (n: number): string => {
     return repeatingDigitsMap[consecutiveDigits];
 }
 
-export const dubsScoreBoard = async (channel: Discord.TextChannel, firestore: Firestore) => {
+export const dubsScoreBoard = async (channel: Discord.TextChannel, firestore: Firestore, user: Discord.User) => {
+    let userScore: DocumentReference<DocumentData> = doc(firestore, `scoreBoards/dubs/${channel.guild}/${user.id}`);
+    getDoc(userScore).then(snapshot => {
+        if(!snapshot.exists()){
+            return;
+        }
+        var fields: Discord.EmbedFieldData[] = [];
+        for (const k in snapshot.data()) {
+            if (k === "name" || k === "iconUrl") continue;
+            fields.push({ name: k, value: snapshot.data()[k] })
+        }
+        var embed = new Discord.MessageEmbed().setColor(0x4286f4);
+        embed.setAuthor(snapshot.data()['name'], snapshot.data()['iconUrl'], snapshot.data()['iconUrl'])
+        embed.addFields(fields)
+        channel.send(embed)
+        return embed;
+    })
+}
+
+export const dubsLeaderBoard = async (channel: Discord.TextChannel, firestore: Firestore) => {
     let collectionRef: CollectionReference<DocumentData> = collection(firestore, `scoreBoards/dubs/${channel.guild}`);
     let collectionSnapshot: QuerySnapshot<DocumentData> = await getDocs(collectionRef);
     collectionSnapshot.docs.sort((a, b) => (a.data()['score'] < b.data()['score']) ? 1 : -1).map(user => {

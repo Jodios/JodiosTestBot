@@ -5,7 +5,7 @@ import { greentext } from "../command/Greentext";
 import { clear } from "../command/Clear";
 import { crypto } from "../command/Crypto";
 import dubsChecker from "../command/DubsChecker";
-import { dubsScoreBoard } from "../command/DubsChecker";
+import { dubsScoreBoard, dubsLeaderBoard } from "../command/DubsChecker";
 import { getRandomImageFromBoard } from "../command/ChanBoards";
 import { PokeNerdService as pokeNerd, guessName, scoreBoard } from "../service/PokeNerdService";
 import { quoteKingTerry } from "../command/KingTerry";
@@ -79,7 +79,10 @@ export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
                     scoreBoard(msg.channel as Discord.TextChannel, firestore);
                     break;
                 case 'dubsscore':
-                    dubsScoreBoard(msg.channel as Discord.TextChannel, firestore);
+                    dubsScoreBoard(msg.channel as Discord.TextChannel, firestore, msg.author);
+                    break;
+                case 'dubsleaderboard':
+                    dubsLeaderBoard(msg.channel as Discord.TextChannel, firestore);
                     break;
             }
         }
