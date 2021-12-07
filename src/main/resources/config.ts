@@ -15,15 +15,15 @@ export const DUBS_SCORING = {
     "score": 20 
   },
   "trips": {
-    "tokenReward": 20,
+    "tokenReward": 10,
     "score": 50 
   },
   "quads": {
-    "tokenReward": 60,
+    "tokenReward": 20,
     "score": 90 
   },
   "quints": {
-    "tokenReward": 120,
+    "tokenReward": 50,
     "score": 150 
   },
 }
