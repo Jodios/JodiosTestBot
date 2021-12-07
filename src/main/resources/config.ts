@@ -5,6 +5,29 @@ export var rollingAdmins: {[key: string]: number} = {
   "Jimba": 2
 }
 
+export const UPDATE_TOKENS_INTERVAL = 1;
+export const MAX_FREE_TOKENS = 30;
+export const FREE_TOKEN_INCREMENT = 5;
+
+export const DUBS_SCORING = {
+  "dubs": {
+    "tokenReward": 5,
+    "score": 20 
+  },
+  "trips": {
+    "tokenReward": 20,
+    "score": 50 
+  },
+  "quads": {
+    "tokenReward": 60,
+    "score": 90 
+  },
+  "quints": {
+    "tokenReward": 120,
+    "score": 150 
+  },
+}
+
 export const quotes = [
   "The explosion affected half of the planet, but Belarus and Ukraine suffered worst of all.",
   "No one can suppress the truth forever, but some people never stop trying. It is the journalists who pay the price.",

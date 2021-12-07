@@ -5,7 +5,7 @@ import { greentext } from "../command/Greentext";
 import { clear } from "../command/Clear";
 import { crypto } from "../command/Crypto";
 import dubsChecker from "../command/DubsChecker";
-import { dubsScoreBoard, dubsLeaderBoard } from "../command/DubsChecker";
+import { dubsScoreBoard, dubsLeaderBoard, updateDubsTokens } from "../command/DubsChecker";
 import { getRandomImageFromBoard } from "../command/ChanBoards";
 import { PokeNerdService as pokeNerd, guessName, scoreBoard } from "../service/PokeNerdService";
 import { quoteKingTerry } from "../command/KingTerry";
@@ -14,6 +14,7 @@ import path from "path";
 import { FirebaseApp } from "firebase/app";
 import { getStorage, FirebaseStorage } from "firebase/storage";
 import { getFirestore, Firestore } from "firebase/firestore";
+import { UPDATE_TOKENS_INTERVAL } from "../resources/config";
 
 const basePath = path.join(__dirname, "../resources");
 const bideoName = "duke.mp4"
@@ -24,6 +25,8 @@ export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
     let storage: FirebaseStorage = getStorage(firebaseApp);
     let firestore: Firestore = getFirestore(firebaseApp);
 
+    setInterval(() => { updateDubsTokens(firestore, client) }, UPDATE_TOKENS_INTERVAL * (1000 * 60 * 60) )
+    // setInterval(() => { updateDubsTokens(firestore, client) }, 5000 )
 
     client.on('message', (msg: Discord.Message) => {
 
