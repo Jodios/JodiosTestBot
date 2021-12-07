@@ -145,6 +145,7 @@ export const updateDubsTokens = async (firestore: Firestore, client: Discord.Cli
     if( !(now >= 23) && !(now <= 1) ) {
         return;
     }
+    cache = {};
     client.guilds.cache.forEach(guild => {
         var collectionRef: CollectionReference<DocumentData> = collection(firestore, `scoreBoards/dubs/${guild.id}`);
         getDocs(collectionRef).then(document => {
