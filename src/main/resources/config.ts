@@ -1,8 +1,8 @@
 
 export var rollingAdmins: {[key: string]: number} = {
-  "jodios": 2,
-  "Teched": 2,
-  "Jimba": 2
+  "jodios": 1,
+  "Teched": 1,
+  "Jimba": 1
 }
 
 export const UPDATE_TOKENS_INTERVAL = 1;
