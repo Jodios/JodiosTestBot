@@ -64,6 +64,7 @@ export default async function dubsChecker(channel: Discord.TextChannel, user: Di
         let data = cache[channel.guild.id][user.id];
         // @ts-ignore
         data['tokens'] += DUBS_SCORING[dubs].tokenReward;
+        data['iconUrl'] = user.avatarURL;
         // @ts-ignore
         data['score'] += DUBS_SCORING[dubs].score;
         if (dubs in data) {
