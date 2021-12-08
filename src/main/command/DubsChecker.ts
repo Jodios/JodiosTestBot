@@ -141,6 +141,7 @@ export const dubsLeaderBoard = async (channel: Discord.TextChannel, firestore: F
 }
 
 export const updateDubsTokens = async (firestore: Firestore, client: Discord.Client) => {
+    console.log(`Checking for tokens at ${new Date()}`)
     // checking if it's between 11PM and 1AM
     var now = new Date().getHours();
     if( !(now >= 23) && !(now <= 1) ) {
