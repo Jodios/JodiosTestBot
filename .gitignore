@@ -5,6 +5,6 @@ INFO.json
 build
 *.log
 firebase.json
-
+config.ts
 
 
