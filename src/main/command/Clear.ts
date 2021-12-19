@@ -14,7 +14,6 @@ export async function clear(channel: Discord.TextChannel, user: Discord.GuildMem
     }
 
 }
-
 function onError(err: Error) {
     console.log(err.message);
 }
