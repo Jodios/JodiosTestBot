@@ -35,7 +35,7 @@ spec:
               protocol: TCP
           volumeMounts:
           - name: config-volume
-            mountPath: /app/build/main/resources
+            mountPath: /app/build/main/resources/config
           envFrom:
             - configMapRef:
                 name: jodiostestbotconfigmap

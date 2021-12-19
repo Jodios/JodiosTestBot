@@ -25,6 +25,9 @@ jobs:
       - name: Write firebase config
         run: echo '${{secrets.FIREBASE_CONFIG}}' >> ./src/main/firebase.json
 
+      - name: Write default config for build
+        run: echo '${{secrets.DEFAULT_CONFIG}}' >> ./src/main/resources/config/config.ts
+
       - name: Build and Test Project
         run: yarn build
 

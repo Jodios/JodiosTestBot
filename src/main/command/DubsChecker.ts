@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import path from "path";
 import jimp from "jimp";
-import { rollingAdmins, MAX_FREE_TOKENS, FREE_TOKEN_INCREMENT, DUBS_SCORING } from "../resources/config";
+import { rollingAdmins, MAX_FREE_TOKENS, FREE_TOKEN_INCREMENT, DUBS_SCORING } from "../resources/config/config";
 import { Firestore, doc, DocumentReference, DocumentData, setDoc, getDoc, CollectionReference, QuerySnapshot, collection, getDocs } from "firebase/firestore";
 
 const basePath = path.join(__dirname, "../resources");

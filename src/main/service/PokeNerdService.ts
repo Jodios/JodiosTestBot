@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import axios from "axios";
 import { FirebaseStorage, StorageReference, uploadBytes, ref, UploadResult, getDownloadURL } from "firebase/storage";
 import { Firestore, doc, setDoc, DocumentData, DocumentReference, CollectionReference, collection, getDoc, getDocs, QuerySnapshot } from "firebase/firestore";
-import { insults } from "../resources/config";
+import { insults } from "../resources/config/config";
 
 const url = "https://pokeapi.co/api/v2/pokemon/";
 let time = new Date().getTime();
