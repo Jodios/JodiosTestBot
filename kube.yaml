@@ -22,6 +22,10 @@ spec:
       labels:
         app: jodios-test-bot 
     spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: jodios-test-bot-config
       containers:
         - name: jodios-test-bot
           image: #{deployment.image.name}#
@@ -29,6 +33,9 @@ spec:
             - name: http-api
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app/build/main/resources
           envFrom:
             - configMapRef:
                 name: jodiostestbotconfigmap
