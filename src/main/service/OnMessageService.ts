@@ -14,7 +14,7 @@ import path from "path";
 import { FirebaseApp } from "firebase/app";
 import { getStorage, FirebaseStorage } from "firebase/storage";
 import { getFirestore, Firestore } from "firebase/firestore";
-import { UPDATE_TOKENS_INTERVAL } from "../resources/config/config";
+import { UPDATE_TOKENS_INTERVAL } from "../resources/config/config.json";
 
 const basePath = path.join(__dirname, "../resources");
 const bideoName = "duke.mp4"

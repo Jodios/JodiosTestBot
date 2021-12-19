@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import path from "path";
 import jimp from "jimp";
-import { rollingAdmins, MAX_FREE_TOKENS, FREE_TOKEN_INCREMENT, DUBS_SCORING } from "../resources/config/config";
+import { rollingAdmins, MAX_FREE_TOKENS, FREE_TOKEN_INCREMENT, DUBS_SCORING } from "../resources/config/config.json";
 import { Firestore, doc, DocumentReference, DocumentData, setDoc, getDoc, CollectionReference, QuerySnapshot, collection, getDocs } from "firebase/firestore";
 
 const basePath = path.join(__dirname, "../resources");
@@ -42,6 +42,7 @@ export default async function dubsChecker(channel: Discord.TextChannel, user: Di
     let rn = Math.floor(Math.random() * (max - min + 1) + min);
     let dubs = checkRepeatingDigits(rn);
     if (!dubs && user.username in rollingAdmins) {
+        //@ts-ignore
         for (var i = 0; i < rollingAdmins[user.username]; i++) {
             rn = Math.floor(Math.random() * (max - min + 1) + min);
             dubs = checkRepeatingDigits(rn);

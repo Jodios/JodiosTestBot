@@ -1,7 +1,7 @@
 // https://insult.mattbas.org
 
 import Discord from "discord.js";
-import {quotes} from "../resources/config/config";
+import {quotes} from "../resources/config/config.json";
 
 export function quoteKingTerry(channel: Discord.TextChannel){
     
