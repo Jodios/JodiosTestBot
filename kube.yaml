@@ -28,7 +28,7 @@ spec:
             name: jodios-test-bot-config
       containers:
         - name: jodios-test-bot
-          image: #{deployment.image.name}#
+          image: jodios/jodios_test_bot:latest
           ports:
             - name: http-api
               containerPort: 8080
