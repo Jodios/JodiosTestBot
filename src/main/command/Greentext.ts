@@ -40,7 +40,7 @@ async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, 
         let buffer = Buffer.from(res.data, "utf-8");
         let file = bucket.file(`jodiostestbot/greentext/${name}.${extension}`);
         file.save(buffer).then(async() => {
-            await file.makePublic().then(res => {console.log(JSON.stringify(res[0]))})
+            await file.makePublic()
             let attachement = new Discord.MessageAttachment(buffer, `${name}.${extension}`)
             channel.send(comment, attachement);
         }).catch(onFailed);
