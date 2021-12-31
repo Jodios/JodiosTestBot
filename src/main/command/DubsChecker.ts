@@ -79,7 +79,7 @@ export default async function dubsChecker(channel: Discord.TextChannel, user: Di
         docRef.set(data)
     } else {
         // @ts-ignore
-        setDoc(docRef, cache[channel.guild.id][user.id])
+        docRef.set(cache[channel.guild.id][user.id])
         channel.send(rn);
     }
 }

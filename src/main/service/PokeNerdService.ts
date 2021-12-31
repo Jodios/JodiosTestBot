@@ -20,7 +20,6 @@ const scoreboardReferenceName = "scoreBoards/pokemon";
  */
 export async function PokeNerdService(n: number, channel: Discord.TextChannel, firestore: Firestore, storage: Storage) {
   if (500 < n && n < 550) {
-    console.log("IN MESSAGE IN MESSAGE IN MESSAAGE")
     let randomPokemonNumber = Math.floor(Math.random() * 806 + 1);
     let docRef: DocumentReference<DocumentData> = firestore.doc(`${cacheReferenceName}/${randomPokemonNumber}`);
     let docSnapshot = await docRef.get();
@@ -50,61 +49,62 @@ export async function PokeNerdService(n: number, channel: Discord.TextChannel, f
 
 const saveImageToFirebase = (imageUrl: string, pokemonNumber: string, actualName: string, storage: Storage, channel: Discord.TextChannel, docRef: DocumentReference<DocumentData>, fulldata: any) => {
   let reference = storage.bucket();
-  axios.get(imageUrl, { responseType: 'arraybuffer' }).then(async(res) => {
+  axios.get(imageUrl, { responseType: 'arraybuffer' }).then(async (res) => {
     let buffer = Buffer.from(res.data, "utf-8");
     let attachement = new Discord.MessageAttachment(buffer, `${pokemonNumber}.png`);
     channel.send("Who's that pokemon?", attachement);
-    reference.upload(`/${cacheReferenceName}/${pokemonNumber}.png`).then( async(value) =>{
+    let file = reference.file(`/${cacheReferenceName}/${pokemonNumber}.png`)
+    await file.save(buffer)
+    await file.makePublic()
 
-      docRef.set({
-        base_experience: fulldata.base_experience,
-        height: fulldata.height,
-        id: fulldata.id,
-        is_default: fulldata.is_default,
-        location_area_encounter: fulldata.location_area_encounters,
-        name: fulldata.name,
-        order: fulldata.order,
-        weight: fulldata.weight,
-        imageUrl: value[0].publicUrl
-      })
-      // @ts-ignore   
-      fulldata.moves.forEach(move => {
-        let moveRef=docRef.firestore.doc(`${docRef.path}/moves/${move.move.name}`)
-        moveRef.set(move);
-      })
-      // @ts-ignore   
-      fulldata.abilities.forEach(ability => {
-        let moveRef=docRef.firestore.doc(`${docRef.path}/abilities/${ability.ability.name}`)
-        moveRef.set(ability);
-      })
-      // @ts-ignore   
-      fulldata.forms.forEach(form => {
-        let moveRef=docRef.firestore.doc(`${docRef.path}/forms/${form.name}`)
-        moveRef.set(form);
-      })
-      let gameIndexRef = docRef.firestore.doc(`${docRef.path}/game_indices/all_indices`);
-      gameIndexRef.set({ game_indices: fulldata.game_indices });
-      // @ts-ignore   
-      fulldata.held_items.forEach(heldItem => {
-        let heldItemRef = docRef.firestore.doc(`${docRef.path}/held_items/${heldItem.item.name}`)
-        heldItemRef.set(heldItem);
-      })
-      let speciesRef = docRef.firestore.doc(`${docRef.path}/species/all_species`);
-      speciesRef.set(fulldata.species);
-      let spritesRef = docRef.firestore.doc(`${docRef.path}/sprites/all_prites`);
-      spritesRef.set(fulldata.sprites);
-      // @ts-ignore   
-      fulldata.stats.forEach(stat => {
-        let statsRef = docRef.firestore.doc(`${docRef.path}/stats/${stat.stat.name}`);
-        statsRef.set(stat);
-      })
-      // @ts-ignore   
-      fulldata.types.forEach(type => {
-        let typesRef = docRef.firestore.doc(`${docRef.path}/types/${type.type.name}`);
-        typesRef.set(type);
-      })
+    docRef.set({
+      base_experience: fulldata.base_experience,
+      height: fulldata.height,
+      id: fulldata.id,
+      is_default: fulldata.is_default,
+      location_area_encounter: fulldata.location_area_encounters,
+      name: fulldata.name,
+      order: fulldata.order,
+      weight: fulldata.weight,
+      imageUrl: file.metadata['mediaLink']
+    })
+    // @ts-ignore   
+    fulldata.moves.forEach(move => {
+      let moveRef = docRef.firestore.doc(`${docRef.path}/moves/${move.move.name}`)
+      moveRef.set(move);
+    })
+    // @ts-ignore   
+    fulldata.abilities.forEach(ability => {
+      let moveRef = docRef.firestore.doc(`${docRef.path}/abilities/${ability.ability.name}`)
+      moveRef.set(ability);
+    })
+    // @ts-ignore   
+    fulldata.forms.forEach(form => {
+      let moveRef = docRef.firestore.doc(`${docRef.path}/forms/${form.name}`)
+      moveRef.set(form);
+    })
+    let gameIndexRef = docRef.firestore.doc(`${docRef.path}/game_indices/all_indices`);
+    gameIndexRef.set({ game_indices: fulldata.game_indices });
+    // @ts-ignore   
+    fulldata.held_items.forEach(heldItem => {
+      let heldItemRef = docRef.firestore.doc(`${docRef.path}/held_items/${heldItem.item.name}`)
+      heldItemRef.set(heldItem);
+    })
+    let speciesRef = docRef.firestore.doc(`${docRef.path}/species/all_species`);
+    speciesRef.set(fulldata.species);
+    let spritesRef = docRef.firestore.doc(`${docRef.path}/sprites/all_prites`);
+    spritesRef.set(fulldata.sprites);
+    // @ts-ignore   
+    fulldata.stats.forEach(stat => {
+      let statsRef = docRef.firestore.doc(`${docRef.path}/stats/${stat.stat.name}`);
+      statsRef.set(stat);
+    })
+    // @ts-ignore   
+    fulldata.types.forEach(type => {
+      let typesRef = docRef.firestore.doc(`${docRef.path}/types/${type.type.name}`);
+      typesRef.set(type);
+    })
 
-    }).catch(err => onFailed(err, imageUrl));
   }).catch(err => onFailed(err, imageUrl));
 }
 
