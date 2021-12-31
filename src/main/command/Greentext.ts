@@ -37,7 +37,9 @@ async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, 
     console.log(`Getting image from: ${randomUrl}`);
     axios.get(randomUrl, { responseType: 'arraybuffer' }).then(res => {
         let buffer = Buffer.from(res.data, "utf-8");
-        bucket.upload(`/jodiostestbot/greentext/${name}.${extension}`).then(value => {
+        let file = bucket.file(`/jodiostestbot/greentext/${name}.${extension}`);
+        file.save(buffer).then(async() => {
+            await file.makePublic().then(res => {console.log(JSON.stringify(res[0]))})
             let attachement = new Discord.MessageAttachment(buffer, `${name}.${extension}`)
             channel.send(comment, attachement);
         }).catch(onFailed);

@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import axios from "axios";
 import { Storage } from "firebase-admin/storage";
-import { Firestore, DocumentData, DocumentReference, CollectionReference, QuerySnapshot } from "firebase-admin/firestore";
+import { Firestore, DocumentData, DocumentReference, CollectionReference, QuerySnapshot, FieldValue } from "firebase-admin/firestore";
 import { insults } from "../resources/config.json";
 
 const url = "https://pokeapi.co/api/v2/pokemon/";
@@ -50,12 +50,11 @@ export async function PokeNerdService(n: number, channel: Discord.TextChannel, f
 
 const saveImageToFirebase = (imageUrl: string, pokemonNumber: string, actualName: string, storage: Storage, channel: Discord.TextChannel, docRef: DocumentReference<DocumentData>, fulldata: any) => {
   let reference = storage.bucket();
-  axios.get(imageUrl, { responseType: 'arraybuffer' }).then(res => {
+  axios.get(imageUrl, { responseType: 'arraybuffer' }).then(async(res) => {
     let buffer = Buffer.from(res.data, "utf-8");
     let attachement = new Discord.MessageAttachment(buffer, `${pokemonNumber}.png`);
     channel.send("Who's that pokemon?", attachement);
     reference.upload(`/${cacheReferenceName}/${pokemonNumber}.png`).then( async(value) =>{
-    // uploadBytes(reference, buffer).then(async (value: UploadResult) => {
 
       docRef.set({
         base_experience: fulldata.base_experience,

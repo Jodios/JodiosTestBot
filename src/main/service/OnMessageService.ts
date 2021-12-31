@@ -25,7 +25,6 @@ export function onMessage(client: Discord.Client, firebaseApp: App) {
 
     let storage: Storage = getStorage(firebaseApp);
     let firestore: Firestore = admin.firestore(); //Firestore = getFirestore(firebaseApp);
-    firestore.doc("/test/test").set({"HELLO": "HELLO"})
 
     setInterval(() => { updateDubsTokens(firestore, client) }, UPDATE_TOKENS_INTERVAL * (1000 * 60 * 60) )
     // setInterval(() => { updateDubsTokens(firestore, client) }, 15000 )
