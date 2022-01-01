@@ -1,8 +1,8 @@
 import Discord from "discord.js";
 import path from "path";
 import jimp from "jimp";
-import { rollingAdmins, MAX_FREE_TOKENS, FREE_TOKEN_INCREMENT, DUBS_SCORING } from "../resources/config/config.json";
-import { Firestore, doc, DocumentReference, DocumentData, setDoc, getDoc, CollectionReference, QuerySnapshot, collection, getDocs } from "firebase/firestore";
+import { rollingAdmins, MAX_FREE_TOKENS, FREE_TOKEN_INCREMENT, DUBS_SCORING } from "../resources/config.json";
+import { Firestore, DocumentReference, DocumentData, CollectionReference, QuerySnapshot } from "firebase-admin/firestore";
 
 const basePath = path.join(__dirname, "../resources");
 const min = 10000000
@@ -13,7 +13,7 @@ const repeatingDigitsMap: { [key: number]: string } = {
 var cache = {}
 
 export default async function dubsChecker(channel: Discord.TextChannel, user: Discord.User, firestore: Firestore) {
-    let docRef: DocumentReference<DocumentData> = doc(firestore, `scoreBoards/dubs/${channel.guild}/${user.id}`)
+    let docRef: DocumentReference<DocumentData> = firestore.doc(`scoreBoards/dubs/${channel.guild}/${user.id}`)
 
     // @ts-ignore
     if (!(channel.guild.id in cache) || !(user.id in cache[channel.guild.id])) {
@@ -23,8 +23,9 @@ export default async function dubsChecker(channel: Discord.TextChannel, user: Di
             // @ts-ignore
             cache[channel.guild.id][user.id] = {};
         }
-        let loadedDoc = await getDoc(docRef);
-        if(loadedDoc.exists()){
+        let loadedDoc = await docRef.get();
+        
+        if(loadedDoc.exists){
             // @ts-ignore
             cache[channel.guild.id][user.id] = loadedDoc.data();
         }else{
@@ -75,7 +76,7 @@ export default async function dubsChecker(channel: Discord.TextChannel, user: Di
         }
         // @ts-ignore
         cache[channel.guild.id][user.id] = data;
-        setDoc(docRef, data);            
+        docRef.set(data)
     } else {
         // @ts-ignore
         setDoc(docRef, cache[channel.guild.id][user.id])
@@ -102,29 +103,31 @@ export const checkRepeatingDigits = (n: number): string => {
 }
 
 export const dubsScoreBoard = async (channel: Discord.TextChannel, firestore: Firestore, user: Discord.User) => {
-    let userScore: DocumentReference<DocumentData> = doc(firestore, `scoreBoards/dubs/${channel.guild}/${user.id}`);
-    getDoc(userScore).then(snapshot => {
-        if (!snapshot.exists()) {
+    let userScore: DocumentReference<DocumentData> = firestore.doc(`scoreBoards/dubs/${channel.guild}/${user.id}`);
+    userScore.get().then(snapshot => {
+        if (!snapshot.exists) {
             return;
         }
         var fields: Discord.EmbedFieldData[] = [];
         for (const k in snapshot.data()) {
             if (k === "name" || k === "iconUrl" || k === "tokens" || k === "score") continue;
-            fields.push({ name: k, value: snapshot.data()[k] })
+            fields.push({ name: k, value: snapshot.data()![k] })
         }
         var embed = new Discord.MessageEmbed().setColor(0x4286f4);
-        embed.setAuthor(snapshot.data()['name'], snapshot.data()['iconUrl'], snapshot.data()['iconUrl'])
-        embed.addField("Score: ", snapshot.data()['score'], true);
+        embed.setAuthor(snapshot.data['name'], snapshot.data()!['iconUrl'], snapshot.data()!['iconUrl'])
+        embed.addField("Score: ", snapshot.data()!['score'], true);
         embed.addFields(fields)
-        embed.setFooter(`Tokens remaining: ${snapshot.data()['tokens']}`);
+        embed.setFooter(`Tokens remaining: ${snapshot.data()!['tokens']}`);
         channel.send(embed);
         return embed;
+    }).catch(reason => {
+        console.log(reason)
     })
 }
 
 export const dubsLeaderBoard = async (channel: Discord.TextChannel, firestore: Firestore) => {
-    let collectionRef: CollectionReference<DocumentData> = collection(firestore, `scoreBoards/dubs/${channel.guild}`);
-    let collectionSnapshot: QuerySnapshot<DocumentData> = await getDocs(collectionRef);
+    let collectionRef: CollectionReference<DocumentData> = firestore.collection(`scoreBoards/dubs/${channel.guild}`);
+    let collectionSnapshot: QuerySnapshot<DocumentData> = await collectionRef.get();
     collectionSnapshot.docs.sort((a, b) => (a.data()['score'] < b.data()['score']) ? 1 : -1).map(user => {
         var fields: Discord.EmbedFieldData[] = []
         for (const k in user.data()) {
@@ -150,16 +153,16 @@ export const updateDubsTokens = async (firestore: Firestore, client: Discord.Cli
     }
     cache = {};
     client.guilds.cache.forEach(guild => {
-        var collectionRef: CollectionReference<DocumentData> = collection(firestore, `scoreBoards/dubs/${guild.id}`);
-        getDocs(collectionRef).then(document => {
+        var collectionRef: CollectionReference<DocumentData> = firestore.collection(`scoreBoards/dubs/${guild.id}`);
+        collectionRef.get().then(document => {
 
             document.forEach(user => {
 
                 if (user.data()['tokens'] < MAX_FREE_TOKENS) {
                     var data = user.data();
-                    var docRef = doc(firestore, `/scoreBoards/dubs/${guild.id}/${user.id}`);
+                    var docRef = firestore.doc(`/scoreBoards/dubs/${guild.id}/${user.id}`);
                     data.tokens += FREE_TOKEN_INCREMENT;
-                    setDoc(docRef, data);
+                    docRef.set(data);
                 }
 
             })

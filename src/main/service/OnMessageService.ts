@@ -11,19 +11,21 @@ import { PokeNerdService as pokeNerd, guessName, scoreBoard } from "../service/P
 import { quoteKingTerry } from "../command/KingTerry";
 import { enterChat, leaveChat } from "../service/OnVoiceChangeService";
 import path from "path";
-import { FirebaseApp } from "firebase/app";
-import { getStorage, FirebaseStorage } from "firebase/storage";
-import { getFirestore, Firestore } from "firebase/firestore";
-import { UPDATE_TOKENS_INTERVAL } from "../resources/config/config.json";
+import { App } from "firebase-admin/app";
+import { getStorage, Storage } from "firebase-admin/storage";
+import { getFirestore, Firestore } from "firebase-admin/firestore";
+import { UPDATE_TOKENS_INTERVAL } from "../resources/config.json";
+import admin from "firebase-admin";
 
 const basePath = path.join(__dirname, "../resources");
 const bideoName = "duke.mp4"
 const maxLength = 40;
 
-export function onMessage(client: Discord.Client, firebaseApp: FirebaseApp) {
+export function onMessage(client: Discord.Client, firebaseApp: App) {
 
-    let storage: FirebaseStorage = getStorage(firebaseApp);
-    let firestore: Firestore = getFirestore(firebaseApp);
+    let storage: Storage = getStorage(firebaseApp);
+    let firestore: Firestore = admin.firestore(); //Firestore = getFirestore(firebaseApp);
+    firestore.doc("/test/test").set({"HELLO": "HELLO"})
 
     setInterval(() => { updateDubsTokens(firestore, client) }, UPDATE_TOKENS_INTERVAL * (1000 * 60 * 60) )
     // setInterval(() => { updateDubsTokens(firestore, client) }, 15000 )

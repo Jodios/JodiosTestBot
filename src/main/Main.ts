@@ -3,14 +3,16 @@ dotenv.config();
 import Discord from "discord.js";
 import { onMessage } from "./service/OnMessageService";
 import figlet from "figlet";
-import firebaseConfig from "./firebase.json";
-import {initializeApp, FirebaseApp} from "firebase/app";
+import { initializeApp, App, cert } from "firebase-admin/app";
 
 let authKey = process.env.discordToken;
 console.log(`authKey = ${process.env.discordToken}`)
-console.log(`plotlyToken = ${process.env.plotlyToken}`);
 
-let firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
+const service_account = require("./resources/admin-config.json")
+let firebaseApp: App = initializeApp({
+    credential: cert(service_account),
+    storageBucket: "jodiostestbot.appspot.com",
+});
 
 // Initialize Discord Bot
 let client = new Discord.Client();

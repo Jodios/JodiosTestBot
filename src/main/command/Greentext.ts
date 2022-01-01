@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import axios, { AxiosResponse } from "axios";
-import { FirebaseStorage, StorageReference, uploadBytes, ref } from "firebase/storage";
+import { Storage } from "firebase-admin/storage";
+import { StorageReference, uploadBytes, ref } from "firebase/storage";
 
 var url = `https://api.pushshift.io/reddit/search/submission/?subreddit=greentext&sort=desc&sort_type=created_utc&size=1000`;
 
@@ -9,7 +10,7 @@ var url = `https://api.pushshift.io/reddit/search/submission/?subreddit=greentex
  * Sends a request to reddit for /r/greentext
  * @param channel 
  */
-export async function greentext(channel: Discord.TextChannel, storage: FirebaseStorage) {
+export async function greentext(channel: Discord.TextChannel, storage: Storage) {
     axios.get(url).then(res => onSuccess(res, channel, storage)).catch(onFailed);
 }
 
@@ -20,7 +21,7 @@ export async function greentext(channel: Discord.TextChannel, storage: FirebaseS
  * @param response 
  * @param channel 
  */
-async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, storage: FirebaseStorage) {
+async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, storage: Storage) {
     let data = response.data.data;
     let urls: { link: string, comment: string }[] = data.map((post: any) => { return { link: post?.url, comment: post?.title } });
     urls = urls.filter(u => u.link.includes("i.redd.it"))
@@ -30,12 +31,13 @@ async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, 
 
     let extension = randomUrl.split("\/").filter((val, index) => val !== "")[2].split(".")[1];
     let name = Math.floor(new Date().getTime() / 1000);
-    let reference: StorageReference = ref(storage, `/jodiostestbot/greentext/${name}.${extension}`);
+    let bucket = storage.bucket()
+    // let reference: StorageReference = ref(storage, `/jodiostestbot/greentext/${name}.${extension}`);
 
     console.log(`Getting image from: ${randomUrl}`);
     axios.get(randomUrl, { responseType: 'arraybuffer' }).then(res => {
         let buffer = Buffer.from(res.data, "utf-8");
-        uploadBytes(reference, buffer).then(value => {
+        bucket.upload(`/jodiostestbot/greentext/${name}.${extension}`).then(value => {
             let attachement = new Discord.MessageAttachment(buffer, `${name}.${extension}`)
             channel.send(comment, attachement);
         }).catch(onFailed);

@@ -23,19 +23,22 @@ spec:
         app: jodios-test-bot 
     spec:
       volumes:
+        - name: admin-key
+          secret:
+            secretName: jodios-test-bot-admin-key
         - name: config-volume
           configMap:
             name: jodios-test-bot-config
       containers:
         - name: jodios-test-bot
           image: #{deployment.image.name}#
-          ports:
-            - name: http-api
-              containerPort: 8080
-              protocol: TCP
           volumeMounts:
+          - name: admin-key
+            mountPath: /app/build/main/resources/admin-config.json
+            subPath: admin-config.json
           - name: config-volume
-            mountPath: /app/build/main/resources/config
+            mountPath: /app/build/main/resources/config.json
+            subPath: config.json
           envFrom:
             - configMapRef:
                 name: jodiostestbotconfigmap

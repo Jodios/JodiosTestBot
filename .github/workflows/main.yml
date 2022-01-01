@@ -26,7 +26,10 @@ jobs:
         run: echo '${{secrets.FIREBASE_CONFIG}}' >> ./src/main/firebase.json
 
       - name: Write default config for build
-        run: mkdir ./src/main/resources/config;echo '${{secrets.DEFAULT_CONFIG}}' >> ./src/main/resources/config/config.json
+        run: echo '${{secrets.DEFAULT_CONFIG}}' >> ./src/main/resources/config.json
+
+      - name: Write default admin config for build
+        run: echo '${{secrets.DEFAULT_ADMIN_CONFIG}}' >> ./src/main/resources/admin-config.json
 
       - name: Build and Test Project
         run: yarn build
