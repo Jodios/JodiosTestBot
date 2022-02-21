@@ -12,7 +12,8 @@ var url = `https://api.pushshift.io/reddit/search/submission/?subreddit=greentex
  * @param channel 
  */
 export async function greentext(channel: Discord.TextChannel, storage: Storage) {
-    axios.get(url).then(res => onSuccess(res, channel, storage)).catch(onFailed);
+    let retriesAllowed = 3;
+    axios.get(url).then(res => onSuccess(res, channel, storage, retriesAllowed)).catch(err => onFailed(err, channel));
 }
 
 /**
@@ -21,18 +22,20 @@ export async function greentext(channel: Discord.TextChannel, storage: Storage) 
  * of posts provided by reddit and returns that picture.
  * @param response 
  * @param channel 
+ * @param storage 
+ * @param retriesRemaining number of times onSuccess is allowed to retry posting a random greentext image
  */
-async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, storage: Storage) {
+async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, storage: Storage, retriesRemaining: number) {
     let data = response.data.data;
     let urls: { link: string, comment: string }[] = data.map((post: any) => { return { link: post?.url, comment: post?.title } });
-    urls = urls.filter(u => u.link.includes("i.redd.it"))
-    let rn = Math.ceil(Math.random() * urls.length - 1)
+    urls = urls.filter(u => u.link.includes("i.redd.it"));
+    let rn = Math.ceil(Math.random() * urls.length - 1);
     let randomUrl = urls[rn]['link'];
-    let comment = urls[rn]['comment']
+    let comment = urls[rn]['comment'];
 
     let extension = randomUrl.split("\/").filter((val, index) => val !== "")[2].split(".")[1];
     let name = Math.floor(new Date().getTime() / 1000);
-    let bucket = storage.bucket()
+    let bucket = storage.bucket();
     // let reference: StorageReference = ref(storage, `/jodiostestbot/greentext/${name}.${extension}`);
 
     console.log(`Getting image from: ${randomUrl}`);
@@ -43,11 +46,17 @@ async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, 
             await file.makePublic()
             let attachement = new Discord.MessageAttachment(buffer, `${name}.${extension}`)
             channel.send(comment, attachement);
-        }).catch(onFailed);
-    }).catch(onFailed);
-
+        }).catch(err => onFailed(err, channel));
+    }).catch((err) => {
+        if (err.response.status == '404' && retriesRemaining--) {
+            onSuccess(response, channel, storage, retriesRemaining);
+        } else {
+            onFailed(err, channel);
+        }
+    });
 }
 
-function onFailed(err: Error) {
+function onFailed(err: Error, channel: Discord.TextChannel) {
     console.log(err.message);
+    channel.send(err.message);
 }
