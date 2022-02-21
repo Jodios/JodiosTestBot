@@ -46,17 +46,21 @@ async function onSuccess(response: AxiosResponse, channel: Discord.TextChannel, 
             await file.makePublic()
             let attachement = new Discord.MessageAttachment(buffer, `${name}.${extension}`)
             channel.send(comment, attachement);
-        }).catch(err => onFailed(err, channel));
+        }).catch(err => onFailed(err.message, channel));
     }).catch((err) => {
-        if (err.response.status == '404' && retriesRemaining--) {
-            onSuccess(response, channel, storage, retriesRemaining);
+        if (err.response.status == 404) {
+            if (retriesRemaining--) {
+                onSuccess(response, channel, storage, retriesRemaining);
+            } else {
+                onFailed("Ran out of retries when getting greentext. " + err.message, channel);
+            }
         } else {
-            onFailed(err, channel);
+            onFailed(err.message, channel);
         }
     });
 }
 
-function onFailed(err: Error, channel: Discord.TextChannel) {
-    console.log(err.message);
-    channel.send(err.message);
+function onFailed(message: string, channel: Discord.TextChannel) {
+    console.log(message);
+    channel.send(message);
 }
