@@ -13,7 +13,7 @@ var url = `https://api.pushshift.io/reddit/search/submission/?subreddit=greentex
  */
 export async function greentext(channel: Discord.TextChannel, storage: Storage) {
     let retriesAllowed = 3;
-    axios.get(url).then(res => onSuccess(res, channel, storage, retriesAllowed)).catch(err => onFailed(err, channel));
+    axios.get(url).then(res => onSuccess(res, channel, storage, retriesAllowed)).catch(err => onFailed(err.message, channel));
 }
 
 /**
