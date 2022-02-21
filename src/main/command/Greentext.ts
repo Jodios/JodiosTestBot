@@ -18,23 +18,14 @@ class Greentext {
  * @param allowedRetries the number of times we're allowed to retry posting a greentext
  */
 export async function greentext(channel: Discord.TextChannel, storage: Storage, allowedRetries: number) {
-    if (!allowedRetries) {
-        onFailed("Ran out of retries for greentext command. ", channel);
-        return;
-    }
     axios.get(url).then((res) => {
-        getRandomGreentext(res.data.data).then((res: Greentext) => {
+        getRandomGreentext(res.data.data, allowedRetries).then((res: Greentext) => {
             let file = storage.bucket().file(`jodiostestbot/greentext/${res.fileName}`);
             file.save(res.buffer).then(async() => {
                 await file.makePublic();
                 channel.send(res.comment, new Discord.MessageAttachment(res.buffer, res.fileName));
             }).catch(err => onFailed(err.message, channel));
-        }).catch(err => {
-            if (err.response.status == 404)
-                greentext(channel, storage, allowedRetries--);
-            else
-                onFailed(err.message, channel);
-        });
+        }).catch(err => onFailed(err.message, channel));
     }).catch(err => onFailed(err.message, channel));
 }
 
@@ -44,26 +35,33 @@ export async function greentext(channel: Discord.TextChannel, storage: Storage, 
  * of posts provided by reddit and returns that picture.
  * @param data 
  */
-function getRandomGreentext(data: any): Promise<Greentext> {
+function getRandomGreentext(data: any, allowedRetries: number): Promise<Greentext> {
     return new Promise((resolve, reject) => {
+        if (!allowedRetries)
+            reject("Greentext command is out of retries.");
         let greentextResult = new Greentext;
         let urls: { link: string, comment: string }[] = data.map((post: any) => { return { link: post?.url, comment: post?.title } });
         urls = urls.filter(u => u.link.includes("i.redd.it"));
 
         let randomNumber = Math.ceil(Math.random() * urls.length - 1);
-        let randomUrl = urls[randomNumber]['link'];
+        let randomImageUrl = urls[randomNumber]['link'];
         greentextResult.comment = urls[randomNumber]['comment'];
 
-        let extension = randomUrl.split("\/").filter((val, index) => val !== "")[2].split(".")[1];
+        let extension = randomImageUrl.split("\/").filter((val, index) => val !== "")[2].split(".")[1];
         let name = Math.floor(new Date().getTime() / 1000);
         greentextResult.fileName = `${name}.${extension}`;
         // let reference: StorageReference = ref(storage, `/jodiostestbot/greentext/${name}.${extension}`);
 
-        console.log(`Getting image from: ${randomUrl}`);
-        axios.get(randomUrl, { responseType: 'arraybuffer' }).then(axiosResult => {
+        console.log(`Getting image from: ${randomImageUrl}`);
+        axios.get(randomImageUrl, { responseType: 'arraybuffer' }).then(axiosResult => {
             greentextResult.buffer = Buffer.from(axiosResult.data, "utf-8");
             resolve(greentextResult);
-        }).catch(err => reject(err)); // not sure if this catch is necessary
+        }).catch(err => {
+            if (err.response.status == 404)
+                getRandomGreentext(data, allowedRetries--).then(res => resolve(res));
+            else
+                reject(err.message);
+        }); // not sure if this catch is necessary
     });
 }
 
