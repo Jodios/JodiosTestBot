@@ -25,8 +25,6 @@ export function onMessage(client: Discord.Client, firebaseApp: App) {
     let storage: Storage = getStorage(firebaseApp);
     let firestore: Firestore = getFirestore(firebaseApp); //Firestore = getFirestore(firebaseApp);
 
-    let allowedRetries: number = 3;
-
     setInterval(() => { updateDubsTokens(firestore, client) }, UPDATE_TOKENS_INTERVAL * (1000 * 60 * 60) )
     // setInterval(() => { updateDubsTokens(firestore, client) }, 15000 )
 
@@ -54,7 +52,7 @@ export function onMessage(client: Discord.Client, firebaseApp: App) {
                     insult(msg, (msg.channel as Discord.TextChannel));
                     break;
                 case 'greentext':
-                    greentext((msg.channel as Discord.TextChannel), storage, allowedRetries);
+                    greentext((msg.channel as Discord.TextChannel), storage);
                     break;
                 case 'rng':
                     dubsChecker((msg.channel as Discord.TextChannel), msg.author, firestore);
