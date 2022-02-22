@@ -46,8 +46,7 @@ function getRandomGreentext(data: any, allowedRetries: number): Promise<Greentex
         urls = urls.filter(u => u.link.includes("i.redd.it"));
 
         let randomNumber = Math.ceil(Math.random() * urls.length - 1);
-        // let randomImageUrl = urls[randomNumber]['link'];
-        let randomImageUrl = "https://i.redd.it/ak8kpxghf7j811.png";
+        let randomImageUrl = urls[randomNumber]['link'];
         greentextResult.comment = urls[randomNumber]['comment'];
 
         let extension = randomImageUrl.split("\/").filter((val, index) => val !== "")[2].split(".")[1];
